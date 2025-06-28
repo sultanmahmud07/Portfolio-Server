@@ -1,0 +1,362 @@
+[
+  {
+    "_id": "0282e0e58a5c404fbd15261f11c2ab6a",
+    "others_info": {
+      "is_todays_pick": false,
+      "is_trending": true
+    },
+    "category_id": "01",
+    "rating": { "number": 4.5, "badge": "Excellent" },
+    "total_view": 488,
+    "title": "Static Page Layout",
+    "author": {
+      "name": "Jimmy Dane",
+      "published_date": "2022-08-24 17:27:34",
+      "img": "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8dXNlcnxlbnwwfHwwfHw%3D&w=1000&q=80"
+    },
+    "thumbnail_url": "https://i.ibb.co/QnwC4sG/unsplash-Eh-Tc-C9s-YXsw-11.png",
+    "image_url": "https://colorlib.com/wp/wp-content/uploads/sites/2/wordpress-themes-static-websites.jpg.webp",
+    "details": "What is a Static Page? A static page layout (sometimes called a “fixed” layout or “fixed width” layout) uses a preset page size and does not change based on the browser width. In other words, the page layout might have a permanent width of 960 pixels no matter what."
+  },
+
+
+  {
+    "_id": "f69a695f037cd9484cecaea37ca71011",
+    "others_info": {
+      "is_todays_pick": false,
+      "is_trending": true
+    },
+    "category_id": "01",
+    "rating": { "number": 4.8, "badge": "Excellent" },
+    "total_view": 400,
+    "title": "Liquid Design Layout.",
+    "author": {
+      "name": "Jennifer Wood",
+      "published_date": "2022-08-30 16:38:45",
+      "img": "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8dXNlcnxlbnwwfHwwfHw%3D&w=1000&q=80"
+    },
+    "thumbnail_url": "https://i.ibb.co/k8XBcMX/unsplash-Eh-Tc-C9s-YXsw-15.png",
+    "image_url": "https://speckyboy.com/wp-content/uploads/2017/03/fluid-layouts.jpg",
+    "details": "The liquid layout means: Instead of using a fixed width for your layouts you could make a flexible layout using percentages for your column width. This layout which we define with percentages instead of fixed pixels works in more situations than fixed-width design.."
+  },
+  {
+    "_id": "f69a695f037cd9484cecaea37ca71012",
+    "others_info": {
+      "is_todays_pick": false,
+      "is_trending": true
+    },
+    "category_id": "02",
+    "rating": { "number": 4.3, "badge": "Excellent" },
+    "total_view": 400,
+    "title": "Front-end web development",
+    "author": {
+      "name": "Jennifer Wood",
+      "published_date": "2022-08-30 16:38:45",
+      "img": "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8dXNlcnxlbnwwfHwwfHw%3D&w=1000&q=80"
+    },
+    "thumbnail_url": "https://i.ibb.co/k8XBcMX/unsplash-Eh-Tc-C9s-YXsw-15.png",
+    "image_url": "https://images.anytask.com/e9c9d4f9293ff5ad/gig/kphzjmbh4g9n1jds1o4a.png",
+    "details": "HTML, CSS, and JavaScript are the languages used for Front End development. The structure, design, behavior, and content of everything seen on browser screens when websites, web applications, or mobile apps are opened up, is implemented by Front End developers."
+  },
+
+  {
+    "_id": "11468ed61aee84de492a8b04158a22f9",
+    "others_info": {
+      "is_todays_pick": false,
+      "is_trending": false
+    },
+    "category_id": "03",
+    "rating": { "number": 4.5, "badge": "Excellent" },
+    "total_view": 980,
+    "title": "Product design",
+    "author": {
+      "name": "system",
+      "published_date": "2022-08-24 23:15:00",
+      "img": "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8dXNlcnxlbnwwfHwwfHw%3D&w=1000&q=80"
+    },
+    "thumbnail_url": "https://i.ibb.co/HXC719r/unsplash-Eh-Tc-C9s-YXsw-19.png",
+    "image_url": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAoHCBUVFRgVFRYZGBgaHBoaHBoYGRoZHBohGhkaGhoaGhgcIS4lIR4rIRoYJjgmKy8xNTU1GiQ7QDs0Py40NTEBDAwMEA8QHxISHzYrJCs0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDE0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NP/AABEIAKoBKQMBIgACEQEDEQH/xAAcAAABBQEBAQAAAAAAAAAAAAAEAQIDBQYHAAj/xABFEAACAQIEAwQHBAcHAgcAAAABAhEAAwQSITFBUWEFInGBBjJCkaGx8BNSwdEHFBVicpLhI0NTgqKy8ZPCFjM0VGOU4v/EABkBAAMBAQEAAAAAAAAAAAAAAAABAgMEBf/EACQRAAICAgIDAAIDAQAAAAAAAAABAhEDIRIxE0FRMmEEcZEi/9oADAMBAAIRAxEAPwDo2G7SzMFYATxFFPiUG7L76zTNUbPVUKzRP2lbHtT4A0Lc7ZQcGPlFVtjAu+oWBzbSjrXYq+2xPQaClSADftpASyW4J3J0nlMChLnb9w6BQPjV+vZtoewD4yfnUyYdF9VVHgAKVoZlhjMS+xb/ACrA+ApDg8Q2hDkH7x/M1q3SaiYECPx3/rRYGaPYTkSzKPEkn4b1Jb7AHtOdOQg+RNXpgkE6Ac9KcG13kcqLYFJjuy7S2Lmclh9m+pOnqHlXBsQfwrr/AOkft9LGHOGU/wBrdEEDdEJ1J6nYedcfvNTjYM29/wBIcN+zkw1tWN4WUDvEKpBGYST3iZ4CN9axnZ3aIt276ZMzXEVQ2aMmUye7BzT4jal+0UWm+80DyFVJNAjZ+i+S5YdGYqUcQdSAHnccBI3otVKNKnUbEfhVB6H4zJfAPqvCMOBDEAT4GDW4x/YhHet6fu8D4cqaBlz6PYlLy5W0cbjmPvD8qn7X9H1uCRow2NY/A3nRxllLinQbEnkJ3nlxrpWCxQuW1fSSBIHA8R0inbA5/j+xL1ogMhk8jOvCIrf9jX3uW1ziHUAONN40bTmNfGeVNxlvOsO+nBo1X8x041L2Lg2RCH0Yk6dBsfPeoY0E3UYiEInr+dAYkAQGUqTvA08AeJOn1pVoLdK9oEaiaQHE/TjBMmLckzmCsN9BlCga7xl4UB2b27esaTnT7rax4HcV1zt70Zt4lMraEeq25XwO4HTbpXLu2/RbE4aWZM6D20106jceenWrjITjYfbxNrEsXRytyAPs7hjbgh28qRwUMMCDyNZMQdt/j5irTB9tOgCXO+nJuHg24q7T7MpRfo0GDtNcaAIUbt+A5mi7areu/Y7Yez37375Hq2yeIJ36BuVVuG7SN1hbV1soRpl1Zugbma1eC7PS3/ZIO6hD3CdS7+yGPTl486lSinxXZccbS5Pr0HM5gs0Zm7zdPur4CsPj8Zdv3iyPkRAYz6LlAPeI07zEaDwFXnpBirgzLbALmM0zoNRsOJOgH8VZK9g7huMLndIAL6jKoGgJAJ56Dc1p6F7ICjXXJLxGucjJAXUGOfIb0W1xDNtluh/WSAQ1xjBV2bn8AAKjuYhHQw7K6v3VA7xI/vLmbpAgbRSvdYMly8HcMTmcdCBCRqB18qO9iPOj5RecNcBaGZmALbGFBA2MyRV/2X6U4pDkV1KgZgl2HIQzEuGzT01rM4bCs2bIDCyQrMYXkZ4URZtreKxbCspA2DlyTrJBAKaE6mjj9Ffw6F2f6b2Xyi+psM2zk5rTdc8aDj3gB1rVW70gEHMDqCNZnaPHfSuZoThszXkzBz6yd7Uj1cpiNjESOdTdk2cRbcmxdW3qWe1Ge0swQuWfWgiSsHXrUOKRakzpiXAadNZHBelttn+zxIFl1MFwxNskAQofQpvqGjlOtXX7Ysf4vy/KlxZXJAbPWgwGCRVVokkAyevIVlexe08LeYFryBd4Y5SfGYgVpL3pDgkHexWHUcB9qnyBqXoEWcUlZbFfpF7MTT9YznkiO3xCx8apcT+lzBrISzffqQiA+9ifhUlHQqSuS4n9MDmfs8Ki8i9xm94VR86psT+lHtB9F+yT+C3P+9mophZ3M0jCvnu/6VdqXB3sTdAPFStoe9QtCXcPiLgzX71xl/ediP5nMe7NT4sVneMd2rhbP/mX7SHgGdc3ko1J8qyHpD+kS1aQphh9pcOkupVE6mYJP7pHjXLwyJpbAJ5rPxc6/wAsChrjc/IChRCx+KxL3Ha7dcu7GWZjJJ+uFDs4YSOG4/GpVwzss9yOAZwv+4gU27hLiAMbYgmAysGXXhKkjnVdCIFOhB8ahAG5PlrP5UTk1+vMU3KV2geUn40UAfYxdsplJhx6pyx5Zhw8a7F2ORfspdHtopPj7Q981xXD2C+hI9wn3iup/o5xBWw1pyC1tzAn2WAafDNmpu+xKi5xvYiPBZe8NiNCPPlRHZ+CFhSzOxHGSIPXpVsCIk0JjRmYICJ4SAYbQgjqBLQf3aBkQOdsxByiCq8fEjjwPT3VcO+dYAOu5gjLz34+FQJaAED3nUnxNE4Y7jzpMEPilrzVFib4RGdtlBJ8vxqRjzUF4dJrPL207mfUB2A/M8an/WmO7H3msXlj6N1hl7K30g9BsPiJdB9k/wB5BofFfyiud9s+jGJw0l0zoPbTUf5hw+HnXVf1gV44kbRTWZIbwM5j6I4IS+KfVLXqL9+5uog8V0bxKda2IJTDl5B4uwM6n1gI3jRQKTt/FAKtmyALjtkQAd1c3ruQOSyfOKs8BhVtolpBCIIH4sepMnzrZSpWZ+PZgl7SvvcLqVRQO8WWQg1GYk8daixMqEuIUIz91H7zuTEu8cyNjXRu0OxLOIQh11I9YaN014+BrBdq9gXMGrsih0jS4QTkG7Ar7M8/jVKSZnLG0V5uKzk3XhnViWAI3BlFkbTEnhSYZbgGqvcCAsiRsCYLMs+JjjFJ+0VvlA5REEIignKpI9YtExx5/gULblnS3dd7ZK54GhYd0KrjXLw8Php2ZdET2LbkPbV0SArEZs9w7kZBpwPTYVf4Ps/DGznLCQJLDu5I4SNVIr2BK4csbtoIDpmHeUDkYEq0zrEbUxsN+sXs6DIFAKsYk7kEzx2yg7b8YpoTGYbOwLlXugGELFRlUmGhSAM8flU7/ZuQMMHtOIzvBUIBp31I7zHYDfczzkfH3MMBbcK8iFb1dBAm4gn7w1XfpS9ldnJfQu75mYmSjEQQZ1IMgyBpwgCjj2+hWTWSbCr9ra/swJBWXAJ0Z3U94kkiTruRpQ36/g/8A/8ASSlS45YrL4hLclFGUZmWILnTMAZA5kTFS/rSf4dz/wCr/wDmnXHVBd+znFlXGttwRyBn4GnPfY+ugPioqTB9mvcebahRzmAo5k7/AJ1pcD6NgxmZ3PQRPgNzWPJmtGTzId0A8j+BFPVbXT+Vj82rqWA9BA4BdFQfvElo/hFW9j9H2DAl0Yk8Jy/Cp5Do42j2R94+CL/3E1MmLQeradvF8nwQD512hPQrArBFmddmZvzq1w/o/hk9SxbHXIpPvImlYUcQwiYu6YsYcKTxS2WbzdpPxq8wn6OsbeOa8wT+N5b3LMV182so7ugHAbe6oTi0AlnVdxBYDbSkM54n6MSB/wCan+r8qFxP6NH9n7Nv4XZT8VArfYj0gsJ7RY/uqfmYFVeJ9LQPUt+bt/2j86Nho5z2j6J42wulpnUcAAx96SD8KzL4gK3fTKwOxGo6GdR4V1LGekWIf28g5IMv+rf41mcfhUvN/bE67vGdx8RPma0V1slpGIQqJGbU6jT51NAKseUfMD8aK7Y7IS2/9lc+0TeSjIw11DKeI5gkeFViucpA4x8DNCY6CsE8MK2Po9jPscTbcmFbuOeEPpJ6Aw3+WsTaRtxpV7bxAKAEjMORHw1mmtqhPuztJRsvfWVGs7jxBFQdlWbrMWKaS5GY96HZSszx7vx983o9fTE4a27QWIGY8c690mTx0+NW6HKIj3bnxBqeTWh0Jbw3M+VEZABAqG3M5m0MQByG+vWns1SMaare3v8A09zwH+5asqqfSa4BYK/eZR7jmPyqZ6TLgrkv7MphgNedet47vFG9Zd+o4EUijkaqO1gQM6nvrMdRxB6GvPS2erxsurmKoXE9oZVLT0HjWXTt4vlUaTv05k03FYrOQg2Ongo38zt51tHHb2ZykktFp2W5d/tSZZ+6nRZkt/mInwVeda5LmXSeVY3szEgNnOgGg8vr4VolvTr0onJuWiIxpbLm3iqKVg/jWdVzROHxRHGqhlrTJnjvoH7a9EbF4FlREf7wXQ/xqIB8d6yV04jBMgdFCLMR6jE8Q4GjcswBiuk2cVMVK9hXUq4DA6EESD5GuuMrOScDnz9pfrJRBCAnvBiCzQJA5Ry5kDlR+MwK2Ez2nKsYAXUhzGzKdNgdQRAE9Kj7d9Bxq2GIX/429X/K26n60rPfrF2wyrftMxRhGcsdOKqScsbGRvAraMvpzyg10XeFuRc+0xAaGCw7DuTrpp6oGkTEzO9Tdo2kuuBYnXRrikgNpqhZdGAnUmY23JFSv2qL9si0pDEAMXAULm7uUH2mMwOHyJA7Ke2odLmUqsEHvIATJUg6wOYM1on7M69DcFcbCKVe2GUn10GonYOjEdBMkacKK/bbfcH/AFbf5Vnu0u1WcK9yFA9VFJMmNSS25jyA8ap/2yvO3/M1VxXtk79I0+DwSooVdh9SetXfZWNayxZFUkiJYTHgeFMwzlDmWJ4EgGOoB0mrXBdkXbxztoDqWedfAbmuZ0joQ256RXhJCp5Bvz8aitekeIJK9wcYKs2nQ5q0mG7AtJ6wLnqYHuFStgETVERY2hRp49KjRRnk7VxDcVnog+WtSfbYp+L+S5fiBWmS6pE7dOI6RSh52250rAyz9l4hxD5o/ef+teT0Zc7uqjoC35VqYphWd9uXHzoAz1v0YtbszP4EKD7tfjRadhYZf7pT4y3zNW+WmstAFY3Y2HP9yn8oqqx/olh3nLmQ9DI9zfmK0rVGRNK2M5X6Q+iT2kd8ysgHrCQR4qeHma5/btAa19B9sYL7ezctAxnRgD19nymNa4Hi7bISrAqVJUg7ggwQetOLbexNfCMuOQ89a8CDuBUQM1NhrDuwVFLEmAAJJ8AKsR0/9FGOJW9YJJClHWeGYEMP9INdEFYj0I7HbDoCQc7MC5jRREBZ6AnzJratvv5H8DSkqBMdSE0teipGJWQ9KcZNwINk08zqfwHka0+PcqjsDECfIbx1iY61gL7FteuvnWGeVR4/To/jwtuXwVm00rNduY11BBG+k8K0LtAiqbH2ldgGAYDcEkAaQCYI2JBrmgto9F6jZS4bChbTvtoNfHh+Pl0oU3co6t8vr51Y4+8D/ZrBVSGYjZmjujwAk1T37gdoiNIB/Ouu6Vf6ca3Ll80ixw+KPdTgSB8a2Nq5MVkrfZDJlZX2gkfE1f2bgBHhXJOSvR0pOtlp9oK8LlCo5NSCs29gkWVm9VhYxMVRhop/20TXRDJRnOCZpUvzFNvYRLgIZQyngwkHyOlUlm+QBBo21jSK6Y5E+znlja6BcT6J2GBhCk/cJA0OmmwgxQOL7IxCrkLtctj2e6GMHQE8R5+VaRMbPxiiBcDfX10rWMq2mYSgn2jnmG7Bs3bhY3HLr/c3ECson2Rs2m3xHGrf9kWf8Gz/ADipfTRALS3FAD23Uq2sghp3GsSBVv8AaJ9wfGtFl+mbw/DS9mdgJbhn779fVHgOPiatLtxVHeMfPyFRYi+U0GpO3IDn/Sq524kyTx4msLb7K6Cn7QHBT5kClt45DodPiKrXaojH15UMC+W2sSANeO9Llqlw9xl1Uxr5e6jl7Q+8Pd+VFAGEU2o7WIV5ynYwdOMT+NPNMR5jUbGnMabHE0AMiajuqSO6Y8Roeh6V7FWmdYBjy3/KhbD3A2QidJ7x4CAYcAzuN9daQEyPJysIPvBjkfd76zfbnoPZxLtcLsjN60AEExEweNXtvEFTLjK3tAngD7HMCeG86wYo224b1SD4GgZgrP6McOD3rtxugCL+BrT9l+jOGw4y27YkjUsZc9JP/FXgSlK+6hWDohtoFHh8P6U0LLTp8/DwNEBaQrVCGkUhFOY1C92kBUellxlw5C+0yqfDVvmorEpqVB5itXjXa8jyveCyRIJU7hQJ20ieJk8gMylpiwy7jX3Vy51bTO7+L+LRBjLoUEngKxGI/WLju4t3IOg7rDQbaxXRmwyrq244nWhDck1lDI4O6OjLFZIqN0YrD27xt5DZcd4ksUMmen1sKHey2YHKQFI4Guko6ADnUwKEcKuWTlvRnGHFUZrDW2dIynURJEUVhMJG+p+FW1x11oB8RrWNI1tsJZABUANKbhNMG9SxIeTXgaQmo82tUkDJlPKphdobPFeW7TTaBpFgmIoq1ifr8qps8Un6zFaxyNGTgmEek94tZy767VbZOvxrNYm4XZFPtOg8swn4TQ//AIkrWNz2YzSjo6ubhYZzu+vgPZHu+ZqMjiamuCT4VFeOlbnINAHDWdutFJ2cD6zHwWB8YpezbUy3IADzoyCPr5UhgDdlrwdx5g/MVX9oYS6jW8jF0LEP3JKrlJBGX96Bsa0KiqbtvFOl2wiMVDC8WAjXIkjcc6G3QD/R9H+zJuLlZnJggjQAAaHwqxYUH2Ffd7Cs7ZnJcEwBs5AEARMCrELQ+w9EIt0y9aDCD4+BGxoqmlaYivcOoMd/TTUAjlJOnnQFy8FzPmyLl1JMCFkyTw3Oo3gcqs+02yoepVfeQDWK9N3YWERdA9wBo45VLAeEif8AKKaQmyLFeltpSRbRn/eJyA+8Fj5gUuF9LlYw9hx/AQ5Eak5coMAa1mUwtTDDOneQlSNiNDUqSHxOmdmdpJcRXRw6Nsw4cxrqI5HUVaxXOPQ/FO1+4pWAUDPGgZ1aA+XYMVaDG+UVu2V+6V+6MwmD7QEAiD6o3I860aTVkp7oMIpjGhreKLkqvrDeVIy9TMeWmvhNedHX1TmHJjr5NUMtCuajNORwwnUQYIOmtIaQAt+yG3Go2OxHgRqKzLW8jsvGdOsTp9cq1jrWY9JMIZLnRIBJBghhsNNdTGvCSeFY5IuXRvhmot2V99DJE7g/KgSBoaEXtK4hRLhFzNqdYKT6ozDcxrrO4FPxONRYzK6cJIke8VjkhWjshJy2g1AIpn2c8a9h7ikSCCOYIPypWvqu5A8SBWfAvkeW1Gp1rzJroKZ+0bQ3uJP8QqP9pWyYDr5yPjVrEzNzQT9nTfso1p9u4H1BBA5az7ql31O3AcfOmsZPMGZKjuoQKNI401zT8YeQCVTGteKVMz0PdvRVLGT5BHaKjLaUO+KHI+dBYjFEaTT8Y+YYcQAxedLaO3mRlX4tWW15VZuR9lG32rhdT7FvVj4Sf9ND/tVPuj3V0Yo1E5cs7kd4DzBHEA++m3fr3U1bRSUPsnTqvs/lTg1BiG9ntuBvpH5npVgFqns3cpkUTjceAoyzmO3TxO3lxoqwCr9xV8eQ3+vGs52lez4hJEZbWJPvRR5UR+tMDD69RQ11pv6f+3uf6ntim1oF2Hdh4pUsIG0jNrw1djRy9oWzs4jnt7waoUsO1hAoABEknlqdPDQk9AOOhl9FVCdCNsniNtvhrpwq3FEpsulcHYg+BB+VLVB2CXQNnBEnQNIIBM+1+EryO9XocRM6e6PGdqlqmUit7feLQ6uoPTcz7wKq8VhUxFso+xjUbqw2I+tQTzq/x+G+0Qpx3HiNvy86wmJuYjDXDctyyH1rZ112LJO88V56jUmldMKsYOwrqNqAw5r+R1Hx8asP2axEZffpXsN6Y4dtHTI3H1l941+VPxHpfhlHcEnkAzfPKKXji/oW0Hdl9mpYVmJAmC7+GwX4wOtSN2o6kuFGU6QzFYCgZdQpE6k++s7gsXicW4uOptWEMqpPfuHgToAiTwGrRuRudi0JYMhEgQAwkETPkf6VukkqZm270Xt0O2W4rEgqIyiCAdfVO+5067aVJh8Q7jYDWMw+Pd57e/pFDdl4lmtgMpD6wDqN98w4f8CjhbgRvO54k8/rkKwZqjxQREaVEUI2OnI/gakVSNJnx39/GvRQBGaq+1MG9wqEIUCZJBMkx7PtQPLXyq3YUyKBoox6P4fIVZM5OpZvWJ5gjbyrL9r2FV3R4Efe0kRoZPSK6Ey0FjOz7dz10VvEa+/espRs2x5nF2cj/ZofM6wQDlBHSmt6PFtZA8q6VjuxUy/2SKjLsAIDazB68j+dU9wAAmI2EHnrIPhBrKSkujshlhLsw69nshyyCdTrx8OVGJZ4EQevHwPGtd2V2TbvO32iZgBI1YQZ6H6irr/w5YAjJmHIs0+8mD5++umEnxXLs48rSk+PRzsYWNtPCpxfuoNHMfvQ3zrdL6NWdYDqvCWkzxjNOn0OtbjuwrbF7dt2Z4g6CBrDayJjXbiI3BAu0+zPkY0ekF85cqo0wPVMkxLCMw20nlXn9JHU5Xtif3ePgDWqseiQDSrqYXiIPePnBOUk+NSXfRPNGbLpscxkdQQNKTUWNSaMsPSFPaRwOYA/A1E/allxIZo/hNXmL9Crh0Rk10zzBHPMsQx6iPzjX0KVFg3dvup+Zqah9ZXkf6Mnj+1so7qyBz091AWMY151RQZYxrqB1nlWp7Z9F0S2zh3MRwHMCdOVUSKqA5CC57pcLlIU75RuWPPaqUU+iJSl7E7RugsQh7q/2aeA1uP56++gZTl8aOwuCLttCDTyHsg8zxPCrj7Bf3P5K0Muzu+Kw+aCPWG3h16VUNuRxG44irHtXElFCqe+3HiBxP4VmMRgXZs6PlfnvPjzrllk4uqs3jj5K7otZpc3U1QYrti/Yj7WwXU+3aPzU1Hb9MMNMOXQ8nQ/MValF+yXikvRf4jEWraG5cZERd2YgAawJPiRXsL2hhGV7udPVCZ5MZSRpm2EtFAm7hsZae3mW4hjMskHcEGBB3A91C2fRPBhCoRoYyYuXOG2kxxobVqhJSCcB2sgbKrKVEBQpmOXGrjEPmQlGykxBmO8ve1PIljPQmsta9GUsycO53DZHIMwCNGidjsa06WMqqpKyF1gA6nUia1u3oJRqG+wrs8BralphtROhE7KZ36E7+O8v2WSd4+8skjoV4jw57CpltQoGkRBEQD+HwqBrhEDUcgxkHwfefH3Un2QL+seBH3hqvny+XWqXEAEmQCOR1B+udWqrJJUlW4iP9y8fEHhvQGLQq2oido9UnkD5TBjzipY0Vl/smxc9dP9rD3MJ+NMs+jthDmVF/lUfhRwaKJBoQMDvaDoOHCg7SM7KFHHjp4nTkJ3q0bCF5VdOZ5f1o3CYRbYganifrhVJiJrdsKoUbARTSSOo58fMcfL3VLTaQDZppp8UppDIqaakYUDj8YEkAZiFzHkBsJ6k6AcaABsTimLQh2MaQS7HgAfZXcnSnJjRqHBUiJ0JiZgmJgGDB20O1Q2VFlM7jvnuqszEmQo6kmSaDtGXAuaOe+MwPfbbQcVXYAagEGNaBl0yVV47sgO2YGJ3kSCdp8Yq0t3Awn6H1zpTSoE2gPBYNbYgak7nn/SiqWKSKYrGuTBgwYMHkeBoHs7CrbkGc7cTGsbAHiB7+dGIWkgxodInbrPGnlQdCJHWgZC4BYRuNWO2kGAT4668jQyY9GMAkciQQDGsg8teMTRV7DgoyDSfPxmd52qutYcq5LxmJIWZykEjZ+Dk8wDqY4mlQWHMDQt+2TSXCwdEQkGZZSNl+Wuuo+6dZotlooLKXF4POrIRowIPnWLxnopdBOUBhzBA+BrpTJUbJVJuPQPZyy7gcXaEANl22DR86Ay3+b/AMz11t7IqP8AVh9Cq5/oXEvMdfz3mjZe6PLf41JbSqzBtLE8yT76uLYrhg+Ts65LiqIMZZDKQRIIrmuPZQ7pc7xUwBElhuCB4EV0/EoSNDXOnlMe7MpEwDPLKNRVZ43Gy8Ev+mD+jXZr2r/2xBRIaEOhnhI+NbS05fU+6gMayjJB3MfAn8KLwhO1c8ZyejaST2HonSigkLpUFoUWu1dmM5Jj+zMSzZwdQsanrOlFuAdDqORoXA3FEpsZnxn/AIositb2c7VAdy3BGk6HKZIaNyMw1n5jw1UXCwIKllOmoBmPAgjXpwqW+YA/iH9f9OaoEDEkSY3gaQWknM0SOBga60yQB8IWuKAWTc8CDtGjDQjXbTUc6Mu4AaMHYZY0JEHWOAB+NQ4m0oYa6zpEAnoJk95hxk9yRrFWNjDsQM5kfd/E6n3f8UgJrQGUQIBAMeOtIRT2MDQT00k9BOk+NQhCUGUZJEwdCs6xA4zvTAUrTWqWKYVoAYK8aUimkUhiGql7LIQzDMASza+sfZbYbawu2uhNWppDQBQ4lDdaTlJ9lCwOVZB6jMwiTqACBxq0Kq6wRI4htweR605sOn3QNZECCDzBG1B4izcBLI0nmAJ8HTRXHgVYcNzQAj4EqcyMSeTGT4ZjuP4vfwp9m60d9YPGNx1K7jxEilt44e33eE+zPIk6qejAedEOgO/lzHgRtQA1SDqDI5ilih71txqkEzrwJ8Rs3joabbxoJggg8TE/AaigAiNfEfL/AJpYpjOu5fbrB/limYfEh4gnWCAwiZEiCPrQ0ASkUjICCCJB3B2PQingzSkUDA7GERJyCJ6yfDXhoPcOVPqZxUTCgQxhTGWnmkNAEDLQ/wCsp94URe17vPfw4+/b/im506e6gY7BCre0apMM8RVhZvVxY5I7ZxYeyzWT9LECAXCNQCJ6GtUjzQXbHZi30KExPKumS5RaMIPjK2c2sdrZ1s66i4R7gR+NbfAiTXM/2DiMLibaNLIX7rAd0yfgYrrGAtQBXN40mkdLyWmwoLFT26hZqmt10xRzy6KTti8UvJHtA/A/1q7wfaCuCMyBl0YFtdt8tV/bmFzKr6ShO+2vPpMVU4Zii3IJEK1xddRocwno3+4VsotmU5Lil7NSZYiDqZ1jYCMxjhwHOTU5ARYBgASTy6zxY/18ROz8VKTxHcP+TQwOc5qkwEv3yCFk5QeJBgufOY8J5UqozJ8LhQGzsO9EKPuDkBwMaH3c5LrwrxoAQikp1JQA000inkUPiH2QGCefLj9fmKAPB1JIB1H150hFPW0uWNx9a+NDnEKrFSdAN99Z201P/NADjTSKlgHb68RTCtIAbEgiGHA/DjT5p5FD2hEpy28KBiXrCtqdDwYaHwniOh0oT7N7fq6ryA7vmg1XxXT92rGK9QAEmNRoUnKWiJOjcwr7E76b9BU17DK0EjvAQGGjAHcA8um1Nv4QE5l0bjGobo67N8+tD3TlEd5SfUKEZTtoAdBvxXnTECYtXTus4ddwAImJhW1jlqAOOmlQFHkQe+5kz6oWCe8JjLEeSiOMEv2ctwMWd1GkOhytIObMJkHWNDIIA03luAwrOe+xJj1oALAx7I9WdDHwGooGH4QEgmTE9ydTHU8jyokGRTgsaCo+fjSAR6jIpztAn68KYpkTEdDwoEMYVGxjU1K1DXjJy8BqfwH1y60DGKZ1O7fAcB9czTtKqvSLtUYbDvePrbIDxY+qPLc+Brjv7fxP+K/vqlG/YrO0I9FYa7QR41KnCvHT2etJWi4tXqKS7NVVqjU2rrhNnNOKIe1rWbIY0DSfdpU1qlubUy1vVv8AKxL8Rb9OS4aW5Xkql2HoKgOpB2IiqLBdmA5i+upXSOm4iDpAmJMcoAvrW1BYP138T+NdeLpnHlE7PweRyinRgv8AlADR5COG+nKr9UAAA2AgeVVPZ3/qH/hPzFXNKfYo9Da8a8a8KgZ6vV4140AITG9CF8xkjXXKvGNsx5T8BpvIqe/sP4l+dJY3f+IfIUwI1tOAdVk8pEeesmOMDbaoMNYkkn2SRHUcfl9AGj22NVHY+1vqNeuo350AWNxRueHEb/XSmWgSJP0OFOxXs+NSGgCEpVfi0ZTnXz6f0q0NMakAFgwSpJ4kmpstMwfq+f5URQBFlqK5Ynn5GCPA/hRNeoAqrmHK7SyTOUc4OhB1APTnwojDWco19Y6n8qJaoiaAFY1HFS8KbQAI8lo9kb8ZPD86e1Ot+qPrjSNQBDcaBP14UOFOx3Op/L65VPf9nx/A0PiPUufwv/tNAzkf6RO3ft7/ANkpm3aldNmf2j+HlWPmnXdz40ladEn/2Q==",
+    "details": "Product design is the process designers use to blend user needs with business goals to help brands make consistently successful products."
+  },
+  {
+    "_id": "11468ed61aee84de492a8b04158a22f0",
+    "others_info": {
+      "is_todays_pick": false,
+      "is_trending": false
+    },
+    "category_id": "01",
+    "rating": { "number": 4.5, "badge": "Excellent" },
+    "total_view": 980,
+    "title": "Adaptive Website Layout.",
+    "author": {
+      "name": "system",
+      "published_date": "2022-08-24 23:15:00",
+      "img": "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8dXNlcnxlbnwwfHwwfHw%3D&w=1000&q=80"
+    },
+    "thumbnail_url": "https://i.ibb.co/HXC719r/unsplash-Eh-Tc-C9s-YXsw-19.png",
+    "image_url": "https://kinsta.com/wp-content/uploads/2020/08/responsive-adaptive-design.png",
+    "details": "Are you ready to learn responsive design? Our course takes you on a journey through the. A course exploring all aspects of responsive design. Learn how to make sites that look. Optimising UX. Website Performance. Website Visibility. Build Excellent Websites."
+  },
+
+  {
+    "_id": "2e78e5e0310c2e9adbb6efb1a263e745",
+    "others_info": {
+      "is_todays_pick": false,
+      "is_trending": true
+    },
+    "category_id": "02",
+    "rating": { "number": 4.5, "badge": "Excellent" },
+    "total_view": null,
+    "title": "Back-end web development",
+    "author": {
+      "name": null,
+      "published_date": "2022-08-30 15:00:04",
+      "img": "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8dXNlcnxlbnwwfHwwfHw%3D&w=1000&q=80"
+    },
+    "thumbnail_url": "https://i.ibb.co/k8XBcMX/unsplash-Eh-Tc-C9s-YXsw-15.png",
+    "image_url": "https://www.interviewbit.com/blog/wp-content/uploads/2021/06/16-1024x640.jpg",
+    "details": "Back-end developers and engineers have similar technical skills, but different responsibilities. A back-end developer is like a teacher, whereas a back-end engineer is like a school principal who creates the big-picture strategy. Back-end developers tend to focus on smaller parts of the whole, such as applications and programs, working with teams to prove their design methods are viable"
+  },
+
+  {
+    "_id": "a713ee936ff5574273f0f769f5c5b20e",
+    "others_info": {
+      "is_todays_pick": false,
+      "is_trending": true
+    },
+    "category_id": "03",
+    "rating": { "number": 4.5, "badge": "Excellent" },
+    "total_view": 111,
+    "title": "Branding design.",
+    "author": {
+      "name": "system",
+      "published_date": null,
+      "img": "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8dXNlcnxlbnwwfHwwfHw%3D&w=1000&q=80"
+    },
+    "thumbnail_url": "https://i.ibb.co/1vcgPzg/unsplash-Eh-Tc-C9s-YXsw-12.png",
+    "image_url": "https://99designs-blog.imgix.net/blog/wp-content/uploads/2017/07/2ac977f5-bff9-4ef0-aa92-38931ae8fe60-2-e1500740591149.png?auto=format&q=60&fit=max&w=930",
+    "details": "Brand design is all about creating a brand identity that perfectly reflects your brand. We've collected the best branding inspiration to show you a variety ..."
+  },
+
+  {
+    "_id": "e342b6c0c8efc8ca9e811991dc8a7900",
+    "others_info": {
+      "is_todays_pick": true,
+      "is_trending": false
+    },
+    "category_id": "04",
+    "rating": { "number": 4.5, "badge": "Excellent" },
+    "total_view": 733,
+    "title": "Anomaly Containment System (ACS)",
+    "author": {
+      "name": "Theo Minh Châu",
+      "published_date": "2022-08-25 06:03:00",
+      "img": "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8dXNlcnxlbnwwfHwwfHw%3D&w=1000&q=80"
+    },
+    "thumbnail_url": "https://i.ibb.co/j86wjDW/unsplash-Eh-Tc-C9s-YXsw-20.png",
+    "image_url": "https://scp-wiki.wdfiles.com/local--files/anomaly-classification-system-guide/ShineShadowIcons.png",
+    "details": "ACS is a new classification system that adds further depth to the already existing Object Class system. It is not intended to replace the current Object Class system. It is only meant to enhance it."
+  },
+  {
+    "_id": "e342b6c0c8efc8ca9e811991dc8a7901",
+    "others_info": {
+      "is_todays_pick": false,
+      "is_trending": false
+    },
+    "category_id": "04",
+    "rating": { "number": 4.5, "badge": "Excellent" },
+    "total_view": 733,
+    "title": "Disruption Class:",
+    "author": {
+      "name": "Theo Minh Châu",
+      "published_date": "2022-08-25 06:03:00",
+      "img": "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8dXNlcnxlbnwwfHwwfHw%3D&w=1000&q=80"
+    },
+    "thumbnail_url": "https://i.ibb.co/df3gJ1b/unsplash-Eh-Tc-C9s-YXsw-13.png",
+    "image_url": "https://i.ibb.co/Z2JjRnF/unsplash-Eh-Tc-C9s-YXsw-2.png",
+    "details": "Learn actionable search marketing tactics that can help you drive more traffic, leads, and revenue. August 16-17, 2022: Master Classes."
+  },
+
+  
+  
+
+  {
+    "_id": "cd2b53655737cc4077542baea9f8f75d",
+    "others_info": {
+      "is_todays_pick": false,
+      "is_trending": true
+    },
+    "category_id": "02",
+    "rating": { "number": 4.5, "badge": "Excellent" },
+    "total_view": 700,
+    "title": "Full-stack web development.",
+    "author": {
+      "name": "Daniel Deangelo",
+      "published_date": "2022-08-30 20:02:53",
+      "img": "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8dXNlcnxlbnwwfHwwfHw%3D&w=1000&q=80"
+    },
+    "thumbnail_url": "https://i.ibb.co/QnwC4sG/unsplash-Eh-Tc-C9s-YXsw-11.png",
+    "image_url": "https://cdn.educba.com/academy/wp-content/uploads/2019/11/full-stack-web-developer.png",
+    "details": "A full stack web developer is a person who can develop both client and server software. In addition to mastering HTML and CSS, he/she also knows how to: Program a browser (like using JavaScript, jQuery, Angular, or Vue) Program a server (like using PHP, ASP, Python, or Node)"
+  },
+  {
+    "_id": "4e6092d54c18fbd89ad59e88a1e87fbb",
+    "others_info": {
+      "is_todays_pick": false,
+      "is_trending": false
+    },
+    "category_id": "07",
+    "rating": { "number": 4.5, "badge": "Excellent" },
+    "total_view": 300,
+    "title": "How to learn data entry?",
+    "author": {
+      "name": "",
+      "published_date": "2022-08-24 22:30:00",
+      "img": "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8dXNlcnxlbnwwfHwwfHw%3D&w=1000&q=80"
+    },
+    "thumbnail_url": "https://i.ibb.co/QnwC4sG/unsplash-Eh-Tc-C9s-YXsw-11.png",
+    "image_url": "https://www.liveabout.com/thmb/gMmzyMb5fdB6jizGh4_vVEZR3dc=/1500x1000/filters:fill(auto,1)/what-is-data-entry-3542483-Final-21d36def44b64b46b104932a69b3ade5.png",
+    "details": "A data entry clerk, also known as data preparation and control operator, data registration and control operator, and data preparation and registration operator, is a member of staff employed to enter or update data into a computer system. Data is often entered into a computer from paper documents using a keyboard. Ability to multitask effectively. Strong written and verbal communication skills. Ability to perform repetitive tasks with a high degree of accuracy. Comfortable working independently with minimal supervision. Data entry is the process of digitizing data by entering it into a computer system for organization and management purposes. It is a person-based process ... Search Outsource Data Entry Services, Top Results From Trusted Resources. Search Outsource Data Entry Services, Get Expert Advice and Curated Content on Searchley. Quick Answers. Explore the Best Info Now. 100+ Unique Results. Useful & Relevant. Find All Info You Want. Find in Seconds. Services: Secure Search, No.1 Answers, Trusted Results, 99% Match.…"
+  },
+  {
+    "_id": "7c4dfea0fafddc813673282a428429b7",
+    "others_info": {
+      "is_todays_pick": false,
+      "is_trending": true
+    },
+    "category_id": "01",
+    "rating": { "number": 4.5, "badge": "Excellent" },
+    "total_view": 0,
+    "title": "Dynamic Website Layout.",
+    "author": {
+      "name": "Reuters",
+      "published_date": "2022-08-25 03:09:16",
+      "img": "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8dXNlcnxlbnwwfHwwfHw%3D&w=1000&q=80"
+    },
+    "thumbnail_url": "https://i.ibb.co/QnwC4sG/unsplash-Eh-Tc-C9s-YXsw-11.png",
+    "image_url": "https://149842033.v2.pressablecdn.com/wp-content/uploads/2020/01/Consulting-dynamic-website-templates.jpg",
+    "details": "A Dynamic Web Template is a HTML-based master copy of a web page that you can create to contain settings, formatting, and page elements such as text, graphics, page layout, styles, and regions of a webpage that can be modified."
+  },
+  {
+    "_id": "30af81e91ab3eafc0bcae0de62f55d5c",
+    "others_info": {
+      "is_todays_pick": false,
+      "is_trending": true
+    },
+    "category_id": "01",
+    "rating": { "number": 4.5, "badge": "Excellent" },
+    "total_view": 320,
+    "title": "Responsive Design Layout.",
+    "author": {
+      "name": "John Pike",
+      "published_date": "2012-08-25 07:35:11",
+      "img": "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8dXNlcnxlbnwwfHwwfHw%3D&w=1000&q=80"
+    },
+    "thumbnail_url": "https://i.ibb.co/1vcgPzg/unsplash-Eh-Tc-C9s-YXsw-12.png",
+    "image_url": "data:image/jpeg;base64,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",
+    "details": "Optimizing your app for large screens improves the overall experience for your users. Learn to configure how your app can handle multi-size and multi-window displays. Create apps for tablets. Create foldable apps. Build Large Screen apps. Support multi-window apps"
+  },
+
+  {
+    "_id": "919db97c34e0778b387dd40cdfa08130",
+    "others_info": {
+      "is_todays_pick": false,
+      "is_trending": true
+    },
+    "category_id": "01",
+    "rating": { "number": 4.5, "badge": "Excellent" },
+    "total_view": 89,
+    "title": "Single Page Layout.",
+    "author": {
+      "name": "MarketScreener",
+      "published_date": "2022-08-30 18:05:42",
+      "img": "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8dXNlcnxlbnwwfHwwfHw%3D&w=1000&q=80"
+    },
+    "thumbnail_url": "https://i.ibb.co/HXC719r/unsplash-Eh-Tc-C9s-YXsw-19.png",
+    "image_url": "https://cdn.dribbble.com/users/1967495/screenshots/13988452/media/5cebef936ac3544bc01f717ca5fcdc10.png?compress=1&resize=400x300",
+    "details": "A single or one page website is simply a website that only contains one HTML page. There are no additional pages, such as an About, Features or Contact Us page. As Awwwards explains, content on single page websites is fully loaded in the initial page, making the experience more continuous and fluid for the user"
+  },
+  
+  {
+    "_id": "acb9b6785b62698fc6130db7615965e1",
+    "others_info": {
+      "is_todays_pick": false,
+      "is_trending": true
+    },
+    "category_id": "03",
+    "rating": { "number": 4.5, "badge": "Excellent" },
+    "total_view": 879,
+    "title": "Logo design.",
+    "author": {
+      "name": "RTTNews",
+      "published_date": "2022-08-25 11:53:13",
+      "img": "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8dXNlcnxlbnwwfHwwfHw%3D&w=1000&q=80"
+    },
+    "thumbnail_url": "https://i.ibb.co/1vcgPzg/unsplash-Eh-Tc-C9s-YXsw-12.png",
+    "image_url": "data:image/jpeg;base64,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",
+    "details": "Logo design is the process of designing a logo. Branding is the process of building a brand. To be more specific, it is a strategy designed by companies to help people to quickly identify their products and organization, and give them a reason to choose their products over the competition."
+  },
+  
+ 
+  {
+    "_id": "7f5b80c1cdd4df0111918883eae07349",
+    "others_info": {
+      "is_todays_pick": false,
+      "is_trending": true
+    },
+    "category_id": "03",
+    "rating": { "number": 4.5, "badge": "Excellent" },
+    "total_view": 1870,
+    "title": "Environmental design",
+    "author": {
+      "name": "system",
+      "published_date": "2022-08-24 23:15:00",
+      "img": "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8dXNlcnxlbnwwfHwwfHw%3D&w=1000&q=80"
+    },
+    "thumbnail_url": "https://i.ibb.co/1vcgPzg/unsplash-Eh-Tc-C9s-YXsw-12.png",
+    "image_url": "https://i.pinimg.com/originals/73/e0/7f/73e07f0974c7287384fd13cd51be6557.jpg",
+    "published_date": "2022-08-24 18:00:00",
+    "details": "Environmental design is the process of addressing surrounding environmental parameters when devising plans, programs, policies, buildings, or products. It seeks to create spaces that will enhance the natural, social, cultural and physical environment of particular areas."
+  },
+ 
+  {
+    "_id": "61f9ce168f7b15aadecb1d1fc80c72f0",
+    "others_info": {
+      "is_todays_pick": false,
+      "is_trending": true
+    },
+    "category_id": "05",
+    "rating": { "number": 4.5, "badge": "Excellent" },
+
+    "total_view": 100,
+    "title": "How Digital Marketing Works",
+    "author": {
+      "name": "system",
+      "published_date": "2022-08-26 00:37:24",
+      "img": "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8dXNlcnxlbnwwfHwwfHw%3D&w=1000&q=80"
+    },
+    "thumbnail_url": "https://i.ibb.co/L507x2V/unsplash-Eh-Tc-C9s-YXsw-14.png",
+    "image_url": "https://www.investopedia.com/thmb/jxswkD8gOGodGUKM4DYyUNSiXLQ=/735x0/TermDefinitions_DigitalMarketing_finalv1-e0b5b14e22e541699ba9d00b07b8a7e8.png",
+    "details": "Digital marketing is a means of attaining business goals through the aid of digital platforms by promoting the business’s products or services. The term has gained immense popularity over the past few years and now is one of the most frequently used term everywhere including small and large businesses."
+  },
+  {
+    "_id": "61f9ce168f7b15aadecb1d1fc80c72f7",
+    "others_info": {
+      "is_todays_pick": false,
+      "is_trending": false
+    },
+    "category_id": "04",
+    "rating": { "number": 4.5, "badge": "Excellent" },
+
+    "total_view": 100,
+    "title": "Dark. 4.2 Vlam. ",
+    "author": {
+      "name": "system",
+      "published_date": "2022-08-26 00:37:24",
+      "img": "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8dXNlcnxlbnwwfHwwfHw%3D&w=1000&q=80"
+    },
+    "thumbnail_url": "https://i.ibb.co/1rcTYYB/unsplash-Eh-Tc-C9s-YXsw-16.png",
+    "image_url": "https://syspree.com/wp-content/uploads/2022/06/How-to-do-Blog-Submission-1024x683.png",
+    "details": "It's a powerful source of traffic. It sends the most qualified visitors. It's more consistent than other traffic sources. There are lots of reasons to love ..."
+  }
+]
