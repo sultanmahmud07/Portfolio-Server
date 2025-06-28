@@ -20,7 +20,6 @@ cloudinary.config({
   api_key: process.env.API_KEY,
   api_secret: process.env.API_SECRET,
 });
-
 // Nodemailer Transporter Configuration
 const transporter = nodemailer.createTransport({
   service: 'Gmail', // Use the appropriate email service
@@ -29,7 +28,6 @@ const transporter = nodemailer.createTransport({
     pass: process.env.EMAIL_PASS  // Your email password or app-specific password (from .env)
   }
 });
-
 
 // Middleware>>>>
 app.use(cors());
@@ -45,7 +43,6 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     const servicesCollection = client.db("portfolioDB").collection("services");
-    const categoriesCollection = client.db("portfolioDB").collection("serviceCategories");
    const projectsCollection = client.db("portfolioDB").collection("projects");
     const projectCategoriesCollection = client.db("portfolioDB").collection("projectCategories");
     const contactQueriesCollection = client.db("portfolioDB").collection("contactQueries");
@@ -73,125 +70,114 @@ async function run() {
       }
     };
 
-    app.post("/admin/register", verifyToken,  async (req, res) => {
-      try {
-        const { name, email, phone, password } = req.body;
 
-        // Check existing
-        const existingAdmin = await adminsCollection.findOne({ email });
-        if (existingAdmin) {
-          return res.status(409).json({ message: "Admin already exists with this email" });
+
+
+    //================================================
+    //       Projects category api action start here 
+    // =====================================================
+    app.post("/project/category/create", async (req, res) => {
+      try {
+        const { category_name, category_slug, status, order } = req.body;
+
+        if (!category_name || !category_slug) {
+          return res.status(400).json({ message: "Name and slug are required" });
         }
 
-        const hashedPassword = await bcrypt.hash(password, 10);
+        // Ensure slug is unique
+        const exists = await projectCategoriesCollection.findOne({ category_slug });
+        if (exists) {
+          return res.status(409).json({ message: "Slug must be unique" });
+        }
 
-        const newAdmin = {
-          name,
-          email,
-          phone,
-          password: hashedPassword,
-          role: "admin",
+        const result = await projectCategoriesCollection.insertOne({
+          category_name,
+          category_slug,
+          order,
+          status,
           createdAt: new Date(),
-        };
-
-        const result = await adminsCollection.insertOne(newAdmin);
-
-        const token = jwt.sign({ id: result.insertedId, email }, process.env.JWT_SECRET, {
-          expiresIn: "7d",
         });
 
         res.status(201).json({
-          message: "Admin registered successfully",
-          data: {
-            ...newAdmin,
-            _id: result.insertedId,
-            token,
-          },
+          message: "Category created",
+          data: { _id: result.insertedId, category_name, category_slug },
         });
-      } catch (err) {
-        console.error("Admin registration failed:", err);
-        res.status(500).json({ message: "Internal Server Error", error: err.message });
+      } catch (error) {
+        res.status(500).json({ message: "Failed to create category", error: error.message });
       }
     });
-    app.post("/admin/login", async (req, res) => {
+    app.get("/project/category/view", async (req, res) => {
       try {
-        const { email, password } = req.body;
-
-        const admin = await adminsCollection.findOne({ email });
-        if (!admin) {
-          return res.status(404).json({ message: "Admin not found" });
-        }
-
-        const isMatch = await bcrypt.compare(password, admin.password);
-        if (!isMatch) {
-          return res.status(401).json({ message: "Invalid password" });
-        }
-
-        const token = jwt.sign(
-          { id: admin._id },
-          process.env.JWT_SECRET,
-          { expiresIn: '7d' }
-        );
-
-        res.status(200).json({
-          message: "Login successful",
-          data: {
-            ...admin,
-            token,
-          },
-        });
-      } catch (err) {
-        console.error("Admin login failed:", err);
-        res.status(500).json({ message: "Internal Server Error", error: err.message });
+        const categories = await projectCategoriesCollection.find().toArray();
+        res.status(200).json(categories);
+      } catch (error) {
+        res.status(500).json({ message: "Failed to fetch categories", error: error.message });
       }
     });
-    app.get("/admins", verifyToken, async (req, res) => {
-      try {
-        const admins = await adminsCollection.find().project({ password: 0 }).toArray();
-        res.status(200).json(admins);
-      } catch (err) {
-        res.status(500).json({ message: "Internal Server Error", error: err.message });
-      }
-    });
-    app.get("/admin/profile/:id", verifyToken, async (req, res) => {
+    app.patch("/project/category/:id", async (req, res) => {
       try {
         const { id } = req.params;
-        if (req.user.id !== id) {
-          return res.status(403).json({ message: "Forbidden: You can't access this profile" });
+        const { category_name, category_slug, status, order } = req.body;
+
+        if (!category_name && !category_slug) {
+          return res.status(400).json({ message: "Nothing to update" });
         }
 
-        const admin = await adminsCollection.findOne(
+        // If slug is updated, ensure it's unique
+        if (category_slug) {
+          const exists = await projectCategoriesCollection.findOne({
+            category_slug,
+            _id: { $ne: new ObjectId(id) }
+          });
+
+          if (exists) {
+            return res.status(409).json({ message: "Slug must be unique" });
+          }
+        }
+
+        const updateDoc = {
+          $set: {
+            ...(category_name && { category_name }),
+            ...(category_slug && { category_slug }),
+            ...(status && { status }),
+            ...(order && { order }),
+            updatedAt: new Date(),
+          },
+        };
+
+        const result = await projectCategoriesCollection.updateOne(
           { _id: new ObjectId(id) },
-          { projection: { password: 0 } }
+          updateDoc
         );
 
-        if (!admin) {
-          return res.status(404).json({ message: "Admin not found" });
+        if (result.modifiedCount === 0) {
+          return res.status(404).json({ message: "Category not found or no changes" });
         }
 
-        res.status(200).json(admin);
-      } catch (err) {
-        console.error("Error getting profile:", err);
-        res.status(500).json({ message: "Internal Server Error", error: err.message });
+        res.status(200).json({ message: "Category updated successfully" });
+      } catch (error) {
+        res.status(500).json({ message: "Update failed", error: error.message });
       }
     });
-    app.delete("/admin/:id", verifyToken, async (req, res) => {
-      const { id } = req.params;
-      // console.log(id)
-      if (!ObjectId.isValid(id)) {
-        return res.status(400).json({ message: "Invalid admin ID" });
+    app.delete("/project/category/:id", async (req, res) => {
+      try {
+        const { id } = req.params;
+
+        const result = await projectCategoriesCollection.deleteOne({ _id: new ObjectId(id) });
+
+        if (result.deletedCount === 0) {
+          return res.status(404).json({ message: "Category not found" });
+        }
+
+        res.status(200).json({ message: "Category deleted successfully" });
+      } catch (error) {
+        res.status(500).json({ message: "Delete failed", error: error.message });
       }
-
-      const result = await adminsCollection.deleteOne({ _id: new ObjectId(id) });
-
-      if (result.deletedCount === 0) {
-        return res.status(404).json({ message: "Admin not found" });
-      }
-
-      res.status(200).json({ message: "Admin deleted successfully" });
     });
 
-
+    //================================================
+    //       Projects api action start here 
+    // =====================================================
 
     //================================================
     //       Service api action start here 
@@ -419,105 +405,6 @@ async function run() {
     });
 
 
-
-    //================================================
-    //       Service category api action start here 
-    // =====================================================
-    app.post("/categories", async (req, res) => {
-      try {
-        const { category_name, category_slug } = req.body;
-
-        if (!category_name || !category_slug) {
-          return res.status(400).json({ message: "Name and slug are required" });
-        }
-
-        // Ensure slug is unique
-        const exists = await categoriesCollection.findOne({ category_slug });
-        if (exists) {
-          return res.status(409).json({ message: "Slug must be unique" });
-        }
-
-        const result = await categoriesCollection.insertOne({
-          category_name,
-          category_slug,
-          createdAt: new Date(),
-        });
-
-        res.status(201).json({
-          message: "Category created",
-          data: { _id: result.insertedId, category_name, category_slug },
-        });
-      } catch (error) {
-        res.status(500).json({ message: "Failed to create category", error: error.message });
-      }
-    });
-    app.get("/categories", async (req, res) => {
-      try {
-        const categories = await categoriesCollection.find().toArray();
-        res.status(200).json(categories);
-      } catch (error) {
-        res.status(500).json({ message: "Failed to fetch categories", error: error.message });
-      }
-    });
-    app.patch("/categories/:id", async (req, res) => {
-      try {
-        const { id } = req.params;
-        const { category_name, category_slug } = req.body;
-
-        if (!category_name && !category_slug) {
-          return res.status(400).json({ message: "Nothing to update" });
-        }
-
-        // If slug is updated, ensure it's unique
-        if (category_slug) {
-          const exists = await categoriesCollection.findOne({
-            category_slug,
-            _id: { $ne: new ObjectId(id) }
-          });
-
-          if (exists) {
-            return res.status(409).json({ message: "Slug must be unique" });
-          }
-        }
-
-        const updateDoc = {
-          $set: {
-            ...(category_name && { category_name }),
-            ...(category_slug && { category_slug }),
-            updatedAt: new Date(),
-          },
-        };
-
-        const result = await categoriesCollection.updateOne(
-          { _id: new ObjectId(id) },
-          updateDoc
-        );
-
-        if (result.modifiedCount === 0) {
-          return res.status(404).json({ message: "Category not found or no changes" });
-        }
-
-        res.status(200).json({ message: "Category updated successfully" });
-      } catch (error) {
-        res.status(500).json({ message: "Update failed", error: error.message });
-      }
-    });
-    app.delete("/categories/:id", async (req, res) => {
-      try {
-        const { id } = req.params;
-
-        const result = await categoriesCollection.deleteOne({ _id: new ObjectId(id) });
-
-        if (result.deletedCount === 0) {
-          return res.status(404).json({ message: "Category not found" });
-        }
-
-        res.status(200).json({ message: "Category deleted successfully" });
-      } catch (error) {
-        res.status(500).json({ message: "Delete failed", error: error.message });
-      }
-    });
-
     //================================================
     //       Blogs api action start here 
     // =====================================================
@@ -623,7 +510,7 @@ async function run() {
         res.status(500).json({ message: "Internal Server Error", error: err.message });
       }
     });
-    app.delete("/blogs/:id", async (req, res) => {
+    app.delete("/blog/:id", async (req, res) => {
       try {
         const { id } = req.params;
         const blog = await blogsCollection.findOne({ _id: new ObjectId(id) });
@@ -662,7 +549,7 @@ async function run() {
         res.status(500).json({ message: "Internal Server Error", error: err.message });
       }
     });
-    app.get("/blog/id/:id", async (req, res) => {
+    app.get("/blog/:id", async (req, res) => {
       try {
         const { id } = req.params;
 
@@ -682,7 +569,6 @@ async function run() {
         res.status(500).json({ message: "Internal Server Error", error: err.message });
       }
     });
-
 
     //================================================
     //       Contact query api action start here 
@@ -751,7 +637,123 @@ async function run() {
         }
       });
     });
+    app.post("/admin/register", verifyToken,  async (req, res) => {
+      try {
+        const { name, email, phone, password } = req.body;
 
+        // Check existing
+        const existingAdmin = await adminsCollection.findOne({ email });
+        if (existingAdmin) {
+          return res.status(409).json({ message: "Admin already exists with this email" });
+        }
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        const newAdmin = {
+          name,
+          email,
+          phone,
+          password: hashedPassword,
+          role: "admin",
+          createdAt: new Date(),
+        };
+
+        const result = await adminsCollection.insertOne(newAdmin);
+
+        const token = jwt.sign({ id: result.insertedId, email }, process.env.JWT_SECRET, {
+          expiresIn: "7d",
+        });
+
+        res.status(201).json({
+          message: "Admin registered successfully",
+          data: {
+            ...newAdmin,
+            _id: result.insertedId,
+            token,
+          },
+        });
+      } catch (err) {
+        console.error("Admin registration failed:", err);
+        res.status(500).json({ message: "Internal Server Error", error: err.message });
+      }
+    });
+    app.post("/admin/login", async (req, res) => {
+      try {
+        const { email, password } = req.body;
+
+        const admin = await adminsCollection.findOne({ email });
+        if (!admin) {
+          return res.status(404).json({ message: "Admin not found" });
+        }
+
+        const isMatch = await bcrypt.compare(password, admin.password);
+        if (!isMatch) {
+          return res.status(401).json({ message: "Invalid password" });
+        }
+
+        const token = jwt.sign(
+          { id: admin._id },
+          process.env.JWT_SECRET,
+          { expiresIn: '7d' }
+        );
+
+        res.status(200).json({
+          message: "Login successful",
+          data: {
+            ...admin,
+            token,
+          },
+        });
+      } catch (err) {
+        console.error("Admin login failed:", err);
+        res.status(500).json({ message: "Internal Server Error", error: err.message });
+      }
+    });
+    app.get("/admins", verifyToken, async (req, res) => {
+      try {
+        const admins = await adminsCollection.find().project({ password: 0 }).toArray();
+        res.status(200).json(admins);
+      } catch (err) {
+        res.status(500).json({ message: "Internal Server Error", error: err.message });
+      }
+    });
+    app.get("/admin/profile/:id", verifyToken, async (req, res) => {
+      try {
+        const { id } = req.params;
+        if (req.user.id !== id) {
+          return res.status(403).json({ message: "Forbidden: You can't access this profile" });
+        }
+
+        const admin = await adminsCollection.findOne(
+          { _id: new ObjectId(id) },
+          { projection: { password: 0 } }
+        );
+
+        if (!admin) {
+          return res.status(404).json({ message: "Admin not found" });
+        }
+
+        res.status(200).json(admin);
+      } catch (err) {
+        console.error("Error getting profile:", err);
+        res.status(500).json({ message: "Internal Server Error", error: err.message });
+      }
+    });
+    app.delete("/admin/:id", verifyToken, async (req, res) => {
+      const { id } = req.params;
+      // console.log(id)
+      if (!ObjectId.isValid(id)) {
+        return res.status(400).json({ message: "Invalid admin ID" });
+      }
+
+      const result = await adminsCollection.deleteOne({ _id: new ObjectId(id) });
+
+      if (result.deletedCount === 0) {
+        return res.status(404).json({ message: "Admin not found" });
+      }
+
+      res.status(200).json({ message: "Admin deleted successfully" });
+    });
 
 
 
