@@ -43,7 +43,7 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     const servicesCollection = client.db("portfolioDB").collection("services");
-   const projectsCollection = client.db("portfolioDB").collection("projects");
+    const projectsCollection = client.db("portfolioDB").collection("projects");
     const projectCategoriesCollection = client.db("portfolioDB").collection("projectCategories");
     const contactQueriesCollection = client.db("portfolioDB").collection("contactQueries");
     const adminsCollection = client.db("portfolioDB").collection("admins");
@@ -178,6 +178,120 @@ async function run() {
     //================================================
     //       Projects api action start here 
     // =====================================================
+    app.post("/project/create", upload.fields([
+      { name: "feature_image", maxCount: 1 },
+      { name: "images", maxCount: 10 }
+    ]), async (req, res) => {
+      try {
+        const {
+          name,
+          slug,
+          description,
+          metaTitle,
+          metaDescription,
+          content,
+          status,
+          tags,
+          start_date,
+          end_date,
+          live_link,
+          git_link,
+          user_react,
+          client_name,
+          client_country,
+          client_link
+        } = req.body;
+
+        // Validate required fields
+        if (!slug || !req.files?.feature_image) {
+          return res.status(400).json({ message: "Slug and feature image are required" });
+        }
+
+        // Check slug uniqueness
+        const existing = await projectsCollection.findOne({ slug });
+        if (existing) {
+          return res.status(409).json({ message: "Slug already exists" });
+        }
+
+        // Upload feature image
+        const featureImageFile = req.files.feature_image[0];
+        const featureBase64 = `data:${featureImageFile.mimetype};base64,${featureImageFile.buffer.toString("base64")}`;
+        const featureUpload = await cloudinary.uploader.upload(featureBase64, {
+          folder: "portfolio_images/projects/feature_images",
+          public_id: slug,
+          resource_type: "image",
+          format: "webp", // 👈 Save image as WebP
+          transformation: [
+            {
+              quality: "auto",       // 👈 Smart compression
+              fetch_format: "auto",  // 👈 Delivery format (not needed for upload, but fine to keep)
+              width: 1200,           // 👈 Optional: limit max width
+              crop: "limit"          // 👈 Resize only if image is larger
+            }
+          ]
+        });
+
+        // Upload multiple images
+        const imageUrls = [];
+        if (req.files.images) {
+          for (const file of req.files.images) {
+            const base64Image = `data:${file.mimetype};base64,${file.buffer.toString("base64")}`;
+            const uploadResult = await cloudinary.uploader.upload(base64Image, {
+              folder: "portfolio_images/projects",
+              resource_type: "image",
+              format: "webp", // 👈 Save image as WebP
+              transformation: [
+                {
+                  quality: "auto",       // 👈 Smart compression
+                  fetch_format: "auto",  // 👈 Delivery format (not needed for upload, but fine to keep)
+                  width: 1200,           // 👈 Optional: limit max width
+                  crop: "limit"          // 👈 Resize only if image is larger
+                }
+              ]
+            });
+            imageUrls.push(uploadResult.secure_url);
+          }
+        }
+
+        const projectData = {
+          name,
+          slug,
+          description,
+          metaTitle,
+          metaDescription,
+          content,
+          status,
+          tags,
+          start_date,
+          end_date,
+          live_link,
+          git_link,
+          user_react: Number(user_react) || 0,
+          client_info: {
+            name: client_name,
+            country: client_country,
+            link: client_link
+          },
+          feature_image: featureUpload.secure_url,
+          images: imageUrls,
+          createdAt: new Date(),
+        };
+
+        const result = await projectsCollection.insertOne(projectData);
+
+        res.status(201).json({
+          message: "Project created successfully",
+          data: {
+            _id: result.insertedId,
+            ...projectData,
+          },
+        });
+
+      } catch (err) {
+        console.error("Project creation failed:", err);
+        res.status(500).json({ message: "Internal Server Error", error: err.message });
+      }
+    });
 
     //================================================
     //       Service api action start here 
@@ -209,13 +323,13 @@ async function run() {
           return res.status(409).json({ message: "Slug already exists. Please use a unique slug." });
         }
 
-      
+
         // Convert image to base64
         const base64Image = `data:${req.file.mimetype};base64,${req.file.buffer.toString("base64")}`;
 
         // Upload to Cloudinary
         const result = await cloudinary.uploader.upload(base64Image, {
-          folder: "portfolio_images",
+          folder: "portfolio_images/services",
           public_id: slug,
           resource_type: "image",
         });
@@ -288,13 +402,13 @@ async function run() {
               .slice(-1)[0]
               .split(".")[0]; // Extract file name
 
-            await cloudinary.uploader.destroy(`portfolio_images/${publicId}`);
+            await cloudinary.uploader.destroy(`portfolio_images/services/${publicId}`);
           }
 
           // Upload new image
           const base64Image = `data:${req.file.mimetype};base64,${req.file.buffer.toString("base64")}`;
           const result = await cloudinary.uploader.upload(base64Image, {
-            folder: "portfolio_images",
+            folder: "portfolio_images/services",
             public_id: slug || undefined,
             resource_type: "image",
           });
@@ -342,7 +456,7 @@ async function run() {
             .slice(-1)[0]
             .split(".")[0]; // Extract file name without extension
 
-          await cloudinary.uploader.destroy(`portfolio_images/${publicId}`);
+          await cloudinary.uploader.destroy(`portfolio_images/services/${publicId}`);
         }
 
         // Delete service from database
@@ -430,7 +544,7 @@ async function run() {
 
         const base64Image = `data:${req.file.mimetype};base64,${req.file.buffer.toString("base64")}`;
         const result = await cloudinary.uploader.upload(base64Image, {
-          folder: "cjus_blogs",
+          folder: "portfolio_images/blogs",
           public_id: slug,
           resource_type: "image",
         });
@@ -478,11 +592,11 @@ async function run() {
         let imageUrl = blog.image;
         if (req.file) {
           const publicId = blog.image?.split("/").pop().split(".")[0];
-          await cloudinary.uploader.destroy(`cjus_blogs/${publicId}`);
+          await cloudinary.uploader.destroy(`portfolio_images/blogs/${publicId}`);
 
           const base64Image = `data:${req.file.mimetype};base64,${req.file.buffer.toString("base64")}`;
           const result = await cloudinary.uploader.upload(base64Image, {
-            folder: "cjus_blogs",
+            folder: "portfolio_images/blogs",
             public_id: slug || blog.slug,
             resource_type: "image",
           });
@@ -517,7 +631,7 @@ async function run() {
         if (!blog) return res.status(404).json({ message: "Blog not found" });
 
         const publicId = blog.image?.split("/").pop().split(".")[0];
-        await cloudinary.uploader.destroy(`cjus_blogs/${publicId}`);
+        await cloudinary.uploader.destroy(`portfolio_images/blogs/${publicId}`);
         await blogsCollection.deleteOne({ _id: new ObjectId(id) });
 
         res.status(200).json({ message: "Blog deleted" });
@@ -589,7 +703,7 @@ async function run() {
 
       // Email HTML
       const emailContent = `
-    <h3>New Contact Request from CJUS</h3>
+    <h3>New Contact Request from Portfolio</h3>
     <table style="border-collapse: collapse; width: 100%; font-family: Arial, sans-serif;">
       <tr>
         <th style="border: 1px solid #dddddd; padding: 8px; background-color: #f2f2f2;">Field</th>
@@ -637,7 +751,7 @@ async function run() {
         }
       });
     });
-    app.post("/admin/register", verifyToken,  async (req, res) => {
+    app.post("/admin/register", verifyToken, async (req, res) => {
       try {
         const { name, email, phone, password } = req.body;
 
