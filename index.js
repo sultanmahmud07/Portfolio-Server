@@ -76,7 +76,7 @@ async function run() {
     //================================================
     //       Projects category api action start here 
     // =====================================================
-    app.post("/project/category/create", async (req, res) => {
+    app.post("/project/category/create", upload.single("image"), async (req, res) => {
       try {
         const { category_name, category_slug, status, order } = req.body;
 
@@ -90,22 +90,50 @@ async function run() {
           return res.status(409).json({ message: "Slug must be unique" });
         }
 
+        // Upload image if exists
+        let imageUrl = null;
+        if (req.file) {
+          const base64 = `data:${req.file.mimetype};base64,${req.file.buffer.toString("base64")}`;
+          const uploadResult = await cloudinary.uploader.upload(base64, {
+            folder: "portfolio_images/project_categories",
+            public_id: category_slug,
+            format: "webp",
+            transformation: [
+              {
+                quality: "auto",
+                width: 600,
+                crop: "limit"
+              }
+            ]
+          });
+          imageUrl = uploadResult.secure_url;
+        }
+
         const result = await projectCategoriesCollection.insertOne({
           category_name,
           category_slug,
-          order,
           status,
+          order: Number(order) || 0,
+          image: imageUrl, // 👈 Save image URL here
           createdAt: new Date(),
         });
 
         res.status(201).json({
           message: "Category created",
-          data: { _id: result.insertedId, category_name, category_slug },
+          data: {
+            _id: result.insertedId,
+            category_name,
+            category_slug,
+            image: imageUrl
+          },
         });
+
       } catch (error) {
+        console.error("Category creation failed:", error);
         res.status(500).json({ message: "Failed to create category", error: error.message });
       }
     });
+
     app.get("/project/category/view", async (req, res) => {
       try {
         const categories = await projectCategoriesCollection.find().toArray();
@@ -114,33 +142,87 @@ async function run() {
         res.status(500).json({ message: "Failed to fetch categories", error: error.message });
       }
     });
-    app.patch("/project/category/:id", async (req, res) => {
+    app.get("/project/category/:id", async (req, res) => {
+      try {
+        const { id } = req.params;
+
+        // Validate ObjectId
+        if (!ObjectId.isValid(id)) {
+          return res.status(400).json({ message: "Invalid category ID" });
+        }
+
+        const category = await projectCategoriesCollection.findOne({ _id: new ObjectId(id) });
+
+        if (!category) {
+          return res.status(404).json({ message: "Category not found" });
+        }
+
+        res.status(200).json(category);
+      } catch (error) {
+        console.error("Error fetching category by ID:", error);
+        res.status(500).json({ message: "Internal Server Error", error: error.message });
+      }
+    });
+
+    app.patch("/project/category/:id", upload.single("image"), async (req, res) => {
       try {
         const { id } = req.params;
         const { category_name, category_slug, status, order } = req.body;
 
-        if (!category_name && !category_slug) {
+        if (!category_name && !category_slug && !status && !order && !req.file) {
           return res.status(400).json({ message: "Nothing to update" });
         }
 
-        // If slug is updated, ensure it's unique
-        if (category_slug) {
+        // Get existing category
+        const existing = await projectCategoriesCollection.findOne({ _id: new ObjectId(id) });
+        if (!existing) {
+          return res.status(404).json({ message: "Category not found" });
+        }
+
+        // Check if slug is changing and ensure it's unique
+        if (category_slug && category_slug !== existing.category_slug) {
           const exists = await projectCategoriesCollection.findOne({
             category_slug,
             _id: { $ne: new ObjectId(id) }
           });
-
           if (exists) {
             return res.status(409).json({ message: "Slug must be unique" });
           }
         }
 
+        // Handle image update
+        let updatedImageUrl = existing.image;
+        const effectiveSlug = category_slug || existing.category_slug;
+
+        if (req.file) {
+          // Delete old image from Cloudinary
+          if (existing.image?.includes("res.cloudinary.com")) {
+            const publicId = existing.category_slug;
+            await cloudinary.uploader.destroy(`portfolio_images/project_categories/${publicId}`);
+          }
+
+          // Upload new image
+          const base64 = `data:${req.file.mimetype};base64,${req.file.buffer.toString("base64")}`;
+          const uploadResult = await cloudinary.uploader.upload(base64, {
+            folder: "portfolio_images/project_categories",
+            public_id: effectiveSlug,
+            format: "webp",
+            transformation: [
+              { quality: "auto", width: 600, crop: "limit" }
+            ]
+          });
+
+          updatedImageUrl = uploadResult.secure_url;
+        }
+
+        // Prepare update object
         const updateDoc = {
           $set: {
             ...(category_name && { category_name }),
             ...(category_slug && { category_slug }),
             ...(status && { status }),
-            ...(order && { order }),
+            ...(order && { order: Number(order) }),
+            image: updatedImageUrl,
             updatedAt: new Date(),
           },
         };
@@ -151,11 +233,13 @@ async function run() {
         );
 
         if (result.modifiedCount === 0) {
-          return res.status(404).json({ message: "Category not found or no changes" });
+          return res.status(404).json({ message: "Category not updated or no changes" });
         }
 
         res.status(200).json({ message: "Category updated successfully" });
+
       } catch (error) {
+        console.error("Category update failed:", error);
         res.status(500).json({ message: "Update failed", error: error.message });
       }
     });
@@ -179,10 +263,183 @@ async function run() {
     //       Projects api action start here 
     // =====================================================
     app.post("/project/create", upload.fields([
+        { name: "feature_image", maxCount: 1 },
+        { name: "images", maxCount: 10 },
+      ]),async (req, res) => {
+        try {
+          const {
+            name,
+            slug,
+            description,
+            metaTitle,
+            metaDescription,
+            content,
+            status,
+            order_number,
+            tags,
+            budget,
+            start_date,
+            end_date,
+            live_link,
+            git_link,
+            user_react,
+            client_name,
+            client_country,
+            client_link,
+            category_id,
+            view_point
+          } = req.body;
+
+          // Slug & feature image required
+          if (!slug || !req.files?.feature_image) {
+            return res
+              .status(400)
+              .json({ message: "Slug and feature image are required" });
+          }
+
+          // Check slug uniqueness
+          const existing = await projectsCollection.findOne({ slug });
+          if (existing) {
+            return res.status(409).json({ message: "Slug already exists" });
+          }
+
+          // ---------- Parse category_ids ----------
+          let category_ids = category_id;
+          if (typeof category_ids === "string") {
+            try {
+              category_ids = JSON.parse(category_ids);
+            } catch (e) {
+              return res
+                .status(400)
+                .json({ message: "Invalid category_id format. Must be an array." });
+            }
+          }
+
+          if (!Array.isArray(category_ids) || category_ids.length === 0) {
+            return res
+              .status(400)
+              .json({ message: "category_id must be a non-empty array." });
+          }
+
+          const objectIds = category_ids.map((id) => new ObjectId(id));
+          const validCategories = await projectCategoriesCollection
+            .find({ _id: { $in: objectIds } })
+            .toArray();
+
+          if (validCategories.length !== category_ids.length) {
+            return res
+              .status(400)
+              .json({ message: "One or more category_id values are invalid." });
+          }
+
+          // ---------- Parse view_point ----------
+          let parsedViewPoint = [];
+          if (view_point) {
+            if (typeof view_point === "string") {
+              try {
+                parsedViewPoint = JSON.parse(view_point);
+              } catch (e) {
+                return res
+                  .status(400)
+                  .json({ message: "Invalid view_point format. Must be an array." });
+              }
+            } else if (Array.isArray(view_point)) {
+              parsedViewPoint = view_point;
+            }
+          }
+
+          // ---------- Upload feature image ----------
+          const featureImageFile = req.files.feature_image[0];
+          const featureBase64 = `data:${featureImageFile.mimetype};base64,${featureImageFile.buffer.toString("base64")}`;
+          const featureUpload = await cloudinary.uploader.upload(featureBase64, {
+            folder: "portfolio_images/projects/feature_images",
+            public_id: slug,
+            resource_type: "image",
+            format: "webp",
+            transformation: [
+              {
+                quality: "auto",
+                fetch_format: "auto",
+                width: 1200,
+                crop: "limit",
+              },
+            ],
+          });
+
+          // ---------- Upload multiple images ----------
+          const imageUrls = [];
+          if (req.files.images) {
+            for (const file of req.files.images) {
+              const base64Image = `data:${file.mimetype};base64,${file.buffer.toString("base64")}`;
+              const uploadResult = await cloudinary.uploader.upload(base64Image, {
+                folder: "portfolio_images/projects",
+                resource_type: "image",
+                format: "webp",
+                transformation: [
+                  {
+                    quality: "auto",
+                    fetch_format: "auto",
+                    width: 1200,
+                    crop: "limit",
+                  },
+                ],
+              });
+              imageUrls.push(uploadResult.secure_url);
+            }
+          }
+
+          // ---------- Prepare project data ----------
+          const projectData = {
+            name,
+            slug,
+            description,
+            metaTitle,
+            metaDescription,
+            content,
+            status,
+            tags,
+            budget,
+            order_number,
+            view_point: parsedViewPoint,
+            start_date,
+            end_date,
+            live_link,
+            git_link,
+            user_react: Number(user_react) || 0,
+            category_ids: objectIds,
+            client_info: {
+              name: client_name,
+              country: client_country,
+              link: client_link,
+            },
+            feature_image: featureUpload.secure_url,
+            images: imageUrls,
+            createdAt: new Date(),
+          };
+
+          const result = await projectsCollection.insertOne(projectData);
+
+          res.status(201).json({
+            message: "Project created successfully",
+            data: {
+              _id: result.insertedId,
+              ...projectData,
+            },
+          });
+        } catch (err) {
+          console.error("Project creation failed:", err);
+          res.status(500).json({ message: "Internal Server Error", error: err.message });
+        }
+      }
+    );
+
+
+    app.patch("/project/update/:id", upload.fields([
       { name: "feature_image", maxCount: 1 },
       { name: "images", maxCount: 10 }
     ]), async (req, res) => {
       try {
+        const { id } = req.params;
         const {
           name,
           slug,
@@ -199,99 +456,171 @@ async function run() {
           user_react,
           client_name,
           client_country,
-          client_link
+          client_link,
+          category_id // 👈 NEW
         } = req.body;
 
-        // Validate required fields
-        if (!slug || !req.files?.feature_image) {
-          return res.status(400).json({ message: "Slug and feature image are required" });
+        const existing = await projectsCollection.findOne({ _id: new ObjectId(id) });
+        if (!existing) return res.status(404).json({ message: "Project not found" });
+
+        // Slug uniqueness check
+        if (slug && slug !== existing.slug) {
+          const slugExists = await projectsCollection.findOne({ slug, _id: { $ne: new ObjectId(id) } });
+          if (slugExists) return res.status(409).json({ message: "Slug already exists" });
         }
 
-        // Check slug uniqueness
-        const existing = await projectsCollection.findOne({ slug });
-        if (existing) {
-          return res.status(409).json({ message: "Slug already exists" });
-        }
-
-        // Upload feature image
-        const featureImageFile = req.files.feature_image[0];
-        const featureBase64 = `data:${featureImageFile.mimetype};base64,${featureImageFile.buffer.toString("base64")}`;
-        const featureUpload = await cloudinary.uploader.upload(featureBase64, {
-          folder: "portfolio_images/projects/feature_images",
-          public_id: slug,
-          resource_type: "image",
-          format: "webp", // 👈 Save image as WebP
-          transformation: [
-            {
-              quality: "auto",       // 👈 Smart compression
-              fetch_format: "auto",  // 👈 Delivery format (not needed for upload, but fine to keep)
-              width: 1200,           // 👈 Optional: limit max width
-              crop: "limit"          // 👈 Resize only if image is larger
-            }
-          ]
-        });
-
-        // Upload multiple images
-        const imageUrls = [];
-        if (req.files.images) {
-          for (const file of req.files.images) {
-            const base64Image = `data:${file.mimetype};base64,${file.buffer.toString("base64")}`;
-            const uploadResult = await cloudinary.uploader.upload(base64Image, {
-              folder: "portfolio_images/projects",
-              resource_type: "image",
-              format: "webp", // 👈 Save image as WebP
-              transformation: [
-                {
-                  quality: "auto",       // 👈 Smart compression
-                  fetch_format: "auto",  // 👈 Delivery format (not needed for upload, but fine to keep)
-                  width: 1200,           // 👈 Optional: limit max width
-                  crop: "limit"          // 👈 Resize only if image is larger
-                }
-              ]
-            });
-            imageUrls.push(uploadResult.secure_url);
+        // Category validation
+        if (category_id) {
+          const validCategory = await projectCategoriesCollection.findOne({ _id: new ObjectId(category_id) });
+          if (!validCategory) {
+            return res.status(400).json({ message: "Invalid category_id" });
           }
         }
 
-        const projectData = {
-          name,
-          slug,
-          description,
-          metaTitle,
-          metaDescription,
-          content,
-          status,
-          tags,
-          start_date,
-          end_date,
-          live_link,
-          git_link,
-          user_react: Number(user_react) || 0,
+        let updatedFeatureImage = existing.feature_image;
+        let updatedImages = existing.images || [];
+
+        // Update feature image
+        if (req.files?.feature_image) {
+          if (existing.feature_image?.includes("res.cloudinary.com")) {
+            await cloudinary.uploader.destroy(`portfolio_images/projects/feature_images/${existing.slug}`);
+          }
+
+          const file = req.files.feature_image[0];
+          const base64 = `data:${file.mimetype};base64,${file.buffer.toString("base64")}`;
+          const upload = await cloudinary.uploader.upload(base64, {
+            folder: "portfolio_images/projects/feature_images",
+            public_id: slug || existing.slug,
+            resource_type: "image",
+            format: "webp",
+            transformation: [{ quality: "auto", width: 1200, crop: "limit" }]
+          });
+
+          updatedFeatureImage = upload.secure_url;
+        }
+
+        // Update gallery images
+        if (req.files?.images) {
+          const destroyOld = (existing.images || []).map(url => {
+            const name = url.split("/").pop().split(".")[0];
+            return cloudinary.uploader.destroy(`portfolio_images/projects/${name}`);
+          });
+          await Promise.all(destroyOld);
+
+          updatedImages = [];
+          for (const file of req.files.images) {
+            const base64 = `data:${file.mimetype};base64,${file.buffer.toString("base64")}`;
+            const upload = await cloudinary.uploader.upload(base64, {
+              folder: "portfolio_images/projects",
+              format: "webp",
+              transformation: [{ quality: "auto", width: 1200, crop: "limit" }]
+            });
+            updatedImages.push(upload.secure_url);
+          }
+        }
+
+        const updateFields = {
+          ...(name && { name }),
+          ...(slug && { slug }),
+          ...(description && { description }),
+          ...(metaTitle && { metaTitle }),
+          ...(metaDescription && { metaDescription }),
+          ...(content && { content }),
+          ...(status && { status }),
+          ...(tags && { tags }),
+          ...(start_date && { start_date }),
+          ...(end_date && { end_date }),
+          ...(live_link && { live_link }),
+          ...(git_link && { git_link }),
+          ...(user_react && { user_react: Number(user_react) }),
+          ...(category_id && { category_id: new ObjectId(category_id) }),
+          feature_image: updatedFeatureImage,
+          images: updatedImages,
           client_info: {
-            name: client_name,
-            country: client_country,
-            link: client_link
-          },
-          feature_image: featureUpload.secure_url,
-          images: imageUrls,
-          createdAt: new Date(),
+            name: client_name || existing.client_info?.name,
+            country: client_country || existing.client_info?.country,
+            link: client_link || existing.client_info?.link
+          }
         };
 
-        const result = await projectsCollection.insertOne(projectData);
+        await projectsCollection.updateOne(
+          { _id: new ObjectId(id) },
+          { $set: updateFields }
+        );
 
-        res.status(201).json({
-          message: "Project created successfully",
-          data: {
-            _id: result.insertedId,
-            ...projectData,
-          },
-        });
+        res.status(200).json({ message: "Project updated successfully" });
 
       } catch (err) {
-        console.error("Project creation failed:", err);
+        console.error("Project update failed:", err);
         res.status(500).json({ message: "Internal Server Error", error: err.message });
       }
     });
+
+    app.get("/projects/view-all", async (req, res) => {
+      try {
+        const projects = await projectsCollection.find({}).sort({ createdAt: -1 }).toArray();
+        res.status(200).json(projects);
+      } catch (err) {
+        console.error("Error fetching all projects:", err);
+        res.status(500).json({ message: "Internal Server Error", error: err.message });
+      }
+    });
+
+    app.delete("/project/delete/:id", async (req, res) => {
+      try {
+        const { id } = req.params;
+        const project = await projectsCollection.findOne({ _id: new ObjectId(id) });
+
+        if (!project) return res.status(404).json({ message: "Project not found" });
+
+        // Delete feature image
+        if (project.feature_image?.includes("res.cloudinary.com")) {
+          await cloudinary.uploader.destroy(`portfolio_projects/feature_images/${project.slug}`);
+        }
+
+        // Delete gallery images
+        if (Array.isArray(project.images)) {
+          const destroyPromises = project.images.map(url => {
+            const fileName = url.split("/").pop().split(".")[0];
+            return cloudinary.uploader.destroy(`portfolio_projects/gallery/${fileName}`);
+          });
+          await Promise.all(destroyPromises);
+        }
+
+        await projectsCollection.deleteOne({ _id: new ObjectId(id) });
+
+        res.status(200).json({ message: "Project deleted successfully" });
+      } catch (err) {
+        console.error("Project deletion failed:", err);
+        res.status(500).json({ message: "Internal Server Error", error: err.message });
+      }
+    });
+    app.get("/project/view/:id", async (req, res) => {
+      try {
+        const { id } = req.params;
+        const project = await projectsCollection.findOne({ _id: new ObjectId(id) });
+        if (!project) return res.status(404).json({ message: "Project not found" });
+
+        res.status(200).json(project);
+      } catch (err) {
+        console.error("Get by ID failed:", err);
+        res.status(500).json({ message: "Internal Server Error", error: err.message });
+      }
+    });
+    app.get("/project/slug/:slug", async (req, res) => {
+      try {
+        const { slug } = req.params;
+        const project = await projectsCollection.findOne({ slug });
+        if (!project) return res.status(404).json({ message: "Project not found" });
+
+        res.status(200).json(project);
+      } catch (err) {
+        console.error("Get by slug failed:", err);
+        res.status(500).json({ message: "Internal Server Error", error: err.message });
+      }
+    });
+
+
 
     //================================================
     //       Service api action start here 
@@ -751,6 +1080,99 @@ async function run() {
         }
       });
     });
+    app.get('/contact-requests-view', async (req, res) => {
+      try {
+        const contactRequests = await contactQueriesCollection
+          .find({})
+          .sort({ createdAt: -1 }) // latest first
+          .toArray();
+
+        res.status(200).json({
+          message: "Contact requests fetched successfully",
+          data: contactRequests
+        });
+      } catch (error) {
+        console.error("Failed to fetch contact requests:", error);
+        res.status(500).json({
+          message: "Internal Server Error",
+          error: error.message
+        });
+      }
+    });
+    app.get('/contact-request/:id', async (req, res) => {
+      try {
+        const { id } = req.params;
+
+        if (!ObjectId.isValid(id)) {
+          return res.status(400).json({ message: "Invalid ID format" });
+        }
+
+        const request = await contactQueriesCollection.findOne({ _id: new ObjectId(id) });
+
+        if (!request) {
+          return res.status(404).json({ message: "Contact request not found" });
+        }
+
+        res.status(200).json({ message: "Contact request fetched", data: request });
+      } catch (error) {
+        console.error("Error getting contact request:", error);
+        res.status(500).json({ message: "Server error", error: error.message });
+      }
+    });
+    app.patch('/contact-request/:id', async (req, res) => {
+      try {
+        const { id } = req.params;
+        const { name, email, phone, message } = req.body;
+
+        if (!ObjectId.isValid(id)) {
+          return res.status(400).json({ message: "Invalid ID format" });
+        }
+
+        const updateFields = {
+          ...(name && { name }),
+          ...(email && { email }),
+          ...(phone && { phone }),
+          ...(message && { message }),
+          updatedAt: new Date()
+        };
+
+        const result = await contactQueriesCollection.updateOne(
+          { _id: new ObjectId(id) },
+          { $set: updateFields }
+        );
+
+        if (result.matchedCount === 0) {
+          return res.status(404).json({ message: "Contact request not found" });
+        }
+
+        res.status(200).json({ message: "Contact request updated successfully" });
+      } catch (error) {
+        console.error("Error updating contact request:", error);
+        res.status(500).json({ message: "Server error", error: error.message });
+      }
+    });
+    app.delete('/contact-request/:id', async (req, res) => {
+      try {
+        const { id } = req.params;
+
+        if (!ObjectId.isValid(id)) {
+          return res.status(400).json({ message: "Invalid ID format" });
+        }
+
+        const result = await contactQueriesCollection.deleteOne({ _id: new ObjectId(id) });
+
+        if (result.deletedCount === 0) {
+          return res.status(404).json({ message: "Contact request not found" });
+        }
+
+        res.status(200).json({ message: "Contact request deleted successfully" });
+      } catch (error) {
+        console.error("Error deleting contact request:", error);
+        res.status(500).json({ message: "Server error", error: error.message });
+      }
+    });
+
+
     app.post("/admin/register", verifyToken, async (req, res) => {
       try {
         const { name, email, phone, password } = req.body;
