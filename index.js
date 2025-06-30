@@ -48,6 +48,7 @@ async function run() {
     const contactQueriesCollection = client.db("portfolioDB").collection("contactQueries");
     const adminsCollection = client.db("portfolioDB").collection("admins");
     const blogsCollection = client.db("portfolioDB").collection("blogs");
+    const reviewsCollection = client.db("portfolioDB").collection("reviews");
 
     // ===============================================
     //      Admin authentication action start here 
@@ -263,177 +264,175 @@ async function run() {
     //       Projects api action start here 
     // =====================================================
     app.post("/project/create", upload.fields([
-        { name: "feature_image", maxCount: 1 },
-        { name: "images", maxCount: 10 },
-      ]),async (req, res) => {
-        try {
-          const {
-            name,
-            slug,
-            description,
-            metaTitle,
-            metaDescription,
-            content,
-            status,
-            order_number,
-            tags,
-            budget,
-            start_date,
-            end_date,
-            live_link,
-            git_link,
-            user_react,
-            client_name,
-            client_country,
-            client_link,
-            category_id,
-            view_point
-          } = req.body;
+      { name: "feature_image", maxCount: 1 },
+      { name: "images", maxCount: 10 },
+    ]), async (req, res) => {
+      try {
+        const {
+          name,
+          slug,
+          description,
+          metaTitle,
+          metaDescription,
+          content,
+          status,
+          order_number,
+          tags,
+          budget,
+          start_date,
+          end_date,
+          live_link,
+          git_link,
+          user_react,
+          client_name,
+          client_country,
+          client_link,
+          category_id,
+          view_point
+        } = req.body;
 
-          // Slug & feature image required
-          if (!slug || !req.files?.feature_image) {
+        // Slug & feature image required
+        if (!slug || !req.files?.feature_image) {
+          return res
+            .status(400)
+            .json({ message: "Slug and feature image are required" });
+        }
+
+        // Check slug uniqueness
+        const existing = await projectsCollection.findOne({ slug });
+        if (existing) {
+          return res.status(409).json({ message: "Slug already exists" });
+        }
+
+        // ---------- Parse category_ids ----------
+        let category_ids = category_id;
+        if (typeof category_ids === "string") {
+          try {
+            category_ids = JSON.parse(category_ids);
+          } catch (e) {
             return res
               .status(400)
-              .json({ message: "Slug and feature image are required" });
+              .json({ message: "Invalid category_id format. Must be an array." });
           }
+        }
 
-          // Check slug uniqueness
-          const existing = await projectsCollection.findOne({ slug });
-          if (existing) {
-            return res.status(409).json({ message: "Slug already exists" });
-          }
+        if (!Array.isArray(category_ids) || category_ids.length === 0) {
+          return res
+            .status(400)
+            .json({ message: "category_id must be a non-empty array." });
+        }
 
-          // ---------- Parse category_ids ----------
-          let category_ids = category_id;
-          if (typeof category_ids === "string") {
+        const objectIds = category_ids.map((id) => new ObjectId(id));
+        const validCategories = await projectCategoriesCollection
+          .find({ _id: { $in: objectIds } })
+          .toArray();
+
+        if (validCategories.length !== category_ids.length) {
+          return res
+            .status(400)
+            .json({ message: "One or more category_id values are invalid." });
+        }
+
+        // ---------- Parse view_point ----------
+        let parsedViewPoint = [];
+        if (view_point) {
+          if (typeof view_point === "string") {
             try {
-              category_ids = JSON.parse(category_ids);
+              parsedViewPoint = JSON.parse(view_point);
             } catch (e) {
               return res
                 .status(400)
-                .json({ message: "Invalid category_id format. Must be an array." });
+                .json({ message: "Invalid view_point format. Must be an array." });
             }
+          } else if (Array.isArray(view_point)) {
+            parsedViewPoint = view_point;
           }
-
-          if (!Array.isArray(category_ids) || category_ids.length === 0) {
-            return res
-              .status(400)
-              .json({ message: "category_id must be a non-empty array." });
-          }
-
-          const objectIds = category_ids.map((id) => new ObjectId(id));
-          const validCategories = await projectCategoriesCollection
-            .find({ _id: { $in: objectIds } })
-            .toArray();
-
-          if (validCategories.length !== category_ids.length) {
-            return res
-              .status(400)
-              .json({ message: "One or more category_id values are invalid." });
-          }
-
-          // ---------- Parse view_point ----------
-          let parsedViewPoint = [];
-          if (view_point) {
-            if (typeof view_point === "string") {
-              try {
-                parsedViewPoint = JSON.parse(view_point);
-              } catch (e) {
-                return res
-                  .status(400)
-                  .json({ message: "Invalid view_point format. Must be an array." });
-              }
-            } else if (Array.isArray(view_point)) {
-              parsedViewPoint = view_point;
-            }
-          }
-
-          // ---------- Upload feature image ----------
-          const featureImageFile = req.files.feature_image[0];
-          const featureBase64 = `data:${featureImageFile.mimetype};base64,${featureImageFile.buffer.toString("base64")}`;
-          const featureUpload = await cloudinary.uploader.upload(featureBase64, {
-            folder: "portfolio_images/projects/feature_images",
-            public_id: slug,
-            resource_type: "image",
-            format: "webp",
-            transformation: [
-              {
-                quality: "auto",
-                fetch_format: "auto",
-                width: 1200,
-                crop: "limit",
-              },
-            ],
-          });
-
-          // ---------- Upload multiple images ----------
-          const imageUrls = [];
-          if (req.files.images) {
-            for (const file of req.files.images) {
-              const base64Image = `data:${file.mimetype};base64,${file.buffer.toString("base64")}`;
-              const uploadResult = await cloudinary.uploader.upload(base64Image, {
-                folder: "portfolio_images/projects",
-                resource_type: "image",
-                format: "webp",
-                transformation: [
-                  {
-                    quality: "auto",
-                    fetch_format: "auto",
-                    width: 1200,
-                    crop: "limit",
-                  },
-                ],
-              });
-              imageUrls.push(uploadResult.secure_url);
-            }
-          }
-
-          // ---------- Prepare project data ----------
-          const projectData = {
-            name,
-            slug,
-            description,
-            metaTitle,
-            metaDescription,
-            content,
-            status,
-            tags,
-            budget,
-            order_number,
-            view_point: parsedViewPoint,
-            start_date,
-            end_date,
-            live_link,
-            git_link,
-            user_react: Number(user_react) || 0,
-            category_ids: objectIds,
-            client_info: {
-              name: client_name,
-              country: client_country,
-              link: client_link,
-            },
-            feature_image: featureUpload.secure_url,
-            images: imageUrls,
-            createdAt: new Date(),
-          };
-
-          const result = await projectsCollection.insertOne(projectData);
-
-          res.status(201).json({
-            message: "Project created successfully",
-            data: {
-              _id: result.insertedId,
-              ...projectData,
-            },
-          });
-        } catch (err) {
-          console.error("Project creation failed:", err);
-          res.status(500).json({ message: "Internal Server Error", error: err.message });
         }
+
+        // ---------- Upload feature image ----------
+        const featureImageFile = req.files.feature_image[0];
+        const featureBase64 = `data:${featureImageFile.mimetype};base64,${featureImageFile.buffer.toString("base64")}`;
+        const featureUpload = await cloudinary.uploader.upload(featureBase64, {
+          folder: "portfolio_images/projects/feature_images",
+          public_id: slug,
+          resource_type: "image",
+          format: "webp",
+          transformation: [
+            {
+              quality: "auto",
+              fetch_format: "auto",
+              width: 1200,
+              crop: "limit",
+            },
+          ],
+        });
+
+        // ---------- Upload multiple images ----------
+        const imageUrls = [];
+        if (req.files.images) {
+          for (const file of req.files.images) {
+            const base64Image = `data:${file.mimetype};base64,${file.buffer.toString("base64")}`;
+            const uploadResult = await cloudinary.uploader.upload(base64Image, {
+              folder: "portfolio_images/projects",
+              resource_type: "image",
+              format: "webp",
+              transformation: [
+                {
+                  quality: "auto",
+                  fetch_format: "auto",
+                  width: 1200,
+                  crop: "limit",
+                },
+              ],
+            });
+            imageUrls.push(uploadResult.secure_url);
+          }
+        }
+
+        // ---------- Prepare project data ----------
+        const projectData = {
+          name,
+          slug,
+          description,
+          metaTitle,
+          metaDescription,
+          content,
+          status,
+          tags,
+          budget,
+          order_number,
+          view_point: parsedViewPoint,
+          start_date,
+          end_date,
+          live_link,
+          git_link,
+          user_react: Number(user_react) || 0,
+          category_ids: objectIds,
+          client_info: {
+            name: client_name,
+            country: client_country,
+            link: client_link,
+          },
+          feature_image: featureUpload.secure_url,
+          images: imageUrls,
+          createdAt: new Date(),
+        };
+
+        const result = await projectsCollection.insertOne(projectData);
+
+        res.status(201).json({
+          message: "Project created successfully",
+          data: {
+            _id: result.insertedId,
+            ...projectData,
+          },
+        });
+      } catch (err) {
+        console.error("Project creation failed:", err);
+        res.status(500).json({ message: "Internal Server Error", error: err.message });
       }
+    }
     );
-
-
     app.patch("/project/update/:id", upload.fields([
       { name: "feature_image", maxCount: 1 },
       { name: "images", maxCount: 10 }
@@ -455,9 +454,12 @@ async function run() {
           git_link,
           user_react,
           client_name,
+          order_number,
           client_country,
           client_link,
-          category_id // 👈 NEW
+          budget,
+          view_point,
+          category_id // 👈 now supports multiple IDs
         } = req.body;
 
         const existing = await projectsCollection.findOne({ _id: new ObjectId(id) });
@@ -469,12 +471,26 @@ async function run() {
           if (slugExists) return res.status(409).json({ message: "Slug already exists" });
         }
 
-        // Category validation
+        // Validate multiple category_ids if present
+        let validatedCategoryIds = existing.category_id || [];
         if (category_id) {
-          const validCategory = await projectCategoriesCollection.findOne({ _id: new ObjectId(category_id) });
-          if (!validCategory) {
-            return res.status(400).json({ message: "Invalid category_id" });
+          let ids = [];
+          try {
+            ids = JSON.parse(category_id);
+            if (!Array.isArray(ids)) throw new Error("category_id must be an array");
+          } catch (err) {
+            return res.status(400).json({ message: "Invalid category_id format" });
           }
+
+          const allValid = await projectCategoriesCollection.find({
+            _id: { $in: ids.map(id => new ObjectId(id)) }
+          }).count();
+
+          if (allValid !== ids.length) {
+            return res.status(400).json({ message: "One or more category IDs are invalid" });
+          }
+
+          validatedCategoryIds = ids.map(id => new ObjectId(id));
         }
 
         let updatedFeatureImage = existing.feature_image;
@@ -527,20 +543,24 @@ async function run() {
           ...(metaDescription && { metaDescription }),
           ...(content && { content }),
           ...(status && { status }),
-          ...(tags && { tags }),
+          ...(tags && { tags: JSON.parse(tags) }),
           ...(start_date && { start_date }),
           ...(end_date && { end_date }),
           ...(live_link && { live_link }),
           ...(git_link && { git_link }),
+          ...(budget && { budget }),
+          ...(order_number && { order_number }),
+          ...(view_point && { view_point: JSON.parse(view_point) }),
           ...(user_react && { user_react: Number(user_react) }),
-          ...(category_id && { category_id: new ObjectId(category_id) }),
+          ...(category_id && { category_id: validatedCategoryIds }),
           feature_image: updatedFeatureImage,
           images: updatedImages,
           client_info: {
             name: client_name || existing.client_info?.name,
             country: client_country || existing.client_info?.country,
             link: client_link || existing.client_info?.link
-          }
+          },
+          updatedAt: new Date()
         };
 
         await projectsCollection.updateOne(
@@ -555,10 +575,34 @@ async function run() {
         res.status(500).json({ message: "Internal Server Error", error: err.message });
       }
     });
-
     app.get("/projects/view-all", async (req, res) => {
       try {
         const projects = await projectsCollection.find({}).sort({ createdAt: -1 }).toArray();
+        res.status(200).json(projects);
+      } catch (err) {
+        console.error("Error fetching all projects:", err);
+        res.status(500).json({ message: "Internal Server Error", error: err.message });
+      }
+    });
+
+    app.get("/projects/view-with-category", async (req, res) => {
+      try {
+        const projects = await projectsCollection
+          .aggregate([
+            {
+              $sort: { createdAt: -1 },
+            },
+            {
+              $lookup: {
+                from: "categories", // collection name in MongoDB
+                localField: "category_ids", // this should be an array of ObjectIds in each project
+                foreignField: "_id", // category _id field
+                as: "categories",
+              },
+            },
+          ])
+          .toArray();
+
         res.status(200).json(projects);
       } catch (err) {
         console.error("Error fetching all projects:", err);
@@ -818,32 +862,19 @@ async function run() {
         res.status(500).json({ message: "Internal Server Error", error: err.message });
       }
     });
-    app.get("/services/filter-by-viewpoint", async (req, res) => {
+    app.get("/services/related/:slug", async (req, res) => {
+      const { slug } = req.params;
+
       try {
-        const { view_point } = req.query;
+        // Fetch all services excluding the one with the provided slug
+        const relatedServices = await servicesCollection
+          .find({ slug: { $ne: slug } }) // $ne = Not Equal
+          .toArray();
 
-        if (!view_point) {
-          return res.status(400).json({ message: "view_point query is required" });
-        }
-
-        const filterValues = view_point.split(",").map((v) => v.trim().toLowerCase());
-
-        // Fetch all and manually filter stringified view_point
-        const allServices = await servicesCollection.find({}).toArray();
-
-        const filtered = allServices.filter((service) => {
-          try {
-            const vpArray = JSON.parse(service.view_point); // Convert stringified array
-            return vpArray.some((vp) => filterValues.includes(vp.toLowerCase()));
-          } catch (e) {
-            return false;
-          }
-        });
-
-        res.status(200).json(filtered);
-      } catch (err) {
-        console.error("Error filtering by view_point:", err);
-        res.status(500).json({ message: "Internal Server Error", error: err.message });
+        res.status(200).json(relatedServices);
+      } catch (error) {
+        console.error("Error fetching related services:", error);
+        res.status(500).json({ message: "Internal Server Error", error: error.message });
       }
     });
 
@@ -1012,6 +1043,141 @@ async function run() {
         res.status(500).json({ message: "Internal Server Error", error: err.message });
       }
     });
+
+    //================================================
+    //       Reviews api action start here 
+    // =====================================================
+    app.post("/review/create", upload.single("profile_image"), async (req, res) => {
+      try {
+        const {
+          user_name,
+          user_email,
+          designation,
+          company,
+          marketplace,
+          review_title,
+          opinion,
+          rating,
+          service_start_date,
+          service_end_date,
+          country,
+          website
+        } = req.body;
+
+        if (!user_name || !user_email || !opinion || !rating) {
+          return res.status(400).json({ message: "Required fields missing" });
+        }
+
+        let profileImageUrl = null;
+        if (req.file) {
+          const base64Image = `data:${req.file.mimetype};base64,${req.file.buffer.toString("base64")}`;
+          const uploadResult = await cloudinary.uploader.upload(base64Image, {
+            folder: "portfolio_images/reviewers",
+            format: "webp",
+            transformation: [{ quality: "auto", width: 500, crop: "limit" }],
+          });
+          profileImageUrl = uploadResult.secure_url;
+        }
+
+        const result = await reviewsCollection.insertOne({
+          user_name,
+          user_email,
+          designation,
+          company,
+          marketplace,
+          review_title,
+          opinion,
+          rating: Number(rating),
+          service_start_date,
+          service_end_date,
+          country,
+          website,
+          profile_image: profileImageUrl,
+          createdAt: new Date()
+        });
+
+        res.status(201).json({
+          message: "Review created successfully",
+          data: { _id: result.insertedId }
+        });
+      } catch (error) {
+        res.status(500).json({ message: "Failed to create review", error: error.message });
+      }
+    });
+
+    app.patch("/review/update/:id", upload.single("profile_image"), async (req, res) => {
+      try {
+        const { id } = req.params;
+        const updateData = req.body;
+
+        if (updateData.rating) {
+          updateData.rating = Number(updateData.rating);
+        }
+
+        if (req.file) {
+          const base64Image = `data:${req.file.mimetype};base64,${req.file.buffer.toString("base64")}`;
+          const uploadResult = await cloudinary.uploader.upload(base64Image, {
+            folder: "portfolio_images/reviewers",
+            format: "webp",
+            transformation: [{ quality: "auto", width: 500, crop: "limit" }],
+          });
+          updateData.profile_image = uploadResult.secure_url;
+        }
+
+        updateData.updatedAt = new Date();
+
+        const result = await reviewsCollection.updateOne(
+          { _id: new ObjectId(id) },
+          { $set: updateData }
+        );
+
+        if (result.matchedCount === 0) {
+          return res.status(404).json({ message: "Review not found" });
+        }
+
+        res.status(200).json({ message: "Review updated successfully" });
+      } catch (error) {
+        res.status(500).json({ message: "Failed to update review", error: error.message });
+      }
+    });
+
+    app.get("/reviews", async (req, res) => {
+      try {
+        const reviews = await reviewsCollection.find().sort({ createdAt: -1 }).toArray();
+        res.status(200).json({ data: reviews });
+      } catch (error) {
+        res.status(500).json({ message: "Failed to fetch reviews", error: error.message });
+      }
+    });
+
+    app.get("/review/:id", async (req, res) => {
+      try {
+        const review = await reviewsCollection.findOne({ _id: new ObjectId(req.params.id) });
+
+        if (!review) {
+          return res.status(404).json({ message: "Review not found" });
+        }
+
+        res.status(200).json({ data: review });
+      } catch (error) {
+        res.status(500).json({ message: "Failed to fetch review", error: error.message });
+      }
+    });
+
+    app.delete("/review/:id", async (req, res) => {
+      try {
+        const result = await reviewsCollection.deleteOne({ _id: new ObjectId(req.params.id) });
+
+        if (result.deletedCount === 0) {
+          return res.status(404).json({ message: "Review not found" });
+        }
+
+        res.status(200).json({ message: "Review deleted successfully" });
+      } catch (error) {
+        res.status(500).json({ message: "Failed to delete review", error: error.message });
+      }
+    });
+
 
     //================================================
     //       Contact query api action start here 
