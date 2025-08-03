@@ -5,7 +5,7 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const nodemailer = require("nodemailer");
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 5005;
 const app = express();
 // Cloudinary and Multer
 const { v2: cloudinary } = require("cloudinary");
@@ -575,15 +575,72 @@ async function run() {
         res.status(500).json({ message: "Internal Server Error", error: err.message });
       }
     });
-    app.get("/projects/view-all", async (req, res) => {
-      try {
-        const projects = await projectsCollection.find({}).sort({ createdAt: -1 }).toArray();
-        res.status(200).json(projects);
-      } catch (err) {
-        console.error("Error fetching all projects:", err);
-        res.status(500).json({ message: "Internal Server Error", error: err.message });
-      }
+    // app.get("/projects/view-all", async (req, res) => {
+    //   try {
+    //     const projects = await projectsCollection
+    //       .find({})
+    //       .sort({ order_number: 1, createdAt: -1 }) // Sort by order_number first, then createdAt
+    //       .toArray();
+
+    //     res.status(200).json(projects);
+    //   } catch (err) {
+    //     console.error("Error fetching all projects:", err);
+    //     res.status(500).json({ message: "Internal Server Error", error: err.message });
+    //   }
+    // });
+
+
+app.get("/projects/view-all", async (req, res) => {
+  try {
+    const projects = await projectsCollection
+      .find({})
+      .sort({ order_number: 1, createdAt: -1 })
+      .toArray();
+
+    // Get all unique category ObjectIds from all projects
+    const allCategoryIds = projects
+      .flatMap((p) => p.category_ids || [])
+      .map((id) => {
+        try {
+          return new ObjectId(id); // safely convert to ObjectId
+        } catch {
+          return null;
+        }
+      })
+      .filter(Boolean); // remove invalid/null values
+
+    const uniqueCategoryIds = [...new Set(allCategoryIds.map((id) => id.toString()))]
+      .map((id) => new ObjectId(id));
+
+    // Fetch the categories
+    const categories = await projectCategoriesCollection
+      .find({ _id: { $in: uniqueCategoryIds } })
+      .toArray();
+
+    // Attach the matched categories to each project
+    const projectsWithCategories = projects.map((project) => {
+      const matchedCategories = (project.category_ids || [])
+        .map((id) => {
+          const objId = new ObjectId(id);
+          return categories.find((cat) => cat._id.toString() === objId.toString());
+        })
+        .filter(Boolean);
+
+      return {
+        ...project,
+        categories: matchedCategories,
+      };
     });
+
+    res.status(200).json(projectsWithCategories);
+  } catch (err) {
+    console.error("Error fetching projects with categories:", err);
+    res.status(500).json({ message: "Internal Server Error", error: err.message });
+  }
+});
+
+
+
 
     app.get("/projects/view-with-category", async (req, res) => {
       try {
